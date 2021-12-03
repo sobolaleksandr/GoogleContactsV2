@@ -1,6 +1,6 @@
 ﻿namespace MVVM.Models
 {
-    public interface IGroup
+    public interface IGroup : IContact
     {
         /// <summary>
         /// Наименование.

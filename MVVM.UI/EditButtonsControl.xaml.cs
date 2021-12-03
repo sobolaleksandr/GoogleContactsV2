@@ -1,8 +1,8 @@
 ﻿namespace MVVM.UI
 {
-    public partial class EditGroupControl
+    public partial class EditButtonsControl
     {
-        public EditGroupControl()
+        public EditButtonsControl()
         {
             InitializeComponent();
         }

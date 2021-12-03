@@ -106,12 +106,7 @@
                 </ComboBox.ItemTemplate>
             </ComboBox>
         </Grid>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Принять"
-                    ui:DialogResultButton.DialogResult="True"
-                    CommandParameter="{Binding}" />
-            <Button Content="Закрыть"
-                    ui:DialogResultButton.DialogResult="False" />
-        </StackPanel>
+        
+        <ui:EditButtonsControl Grid.Row="1" />
     </Grid>
 </UserControl>

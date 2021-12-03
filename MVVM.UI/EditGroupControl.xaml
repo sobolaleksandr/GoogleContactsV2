@@ -41,11 +41,6 @@
                 </TextBox.Text>
             </TextBox>
         </Grid>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Принять"
-                    local:DialogResultButton.DialogResult="True" 
-                    Command="{Binding ApplyCommand}"
-                    CommandParameter="{Binding}" />
-        </StackPanel>
+        <local:EditButtonsControl Grid.Row="1" />
     </Grid>
 </UserControl>

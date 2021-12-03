@@ -46,28 +46,19 @@
         /// <param name="groups"> Группы. </param>
         public PersonViewModel(IContact contact, List<GroupViewModel> groups) : base(contact)
         {
-            if (!(contact is IPerson person))
-                return;
-
-            Email = person.Email;
-            FamilyName = person.FamilyName;
-            GivenName = person.GivenName;
-            Organization = person.Organization;
-            PhoneNumber = person.PhoneNumber;
+            SetProperties(contact);
             Groups = new ObservableCollection<GroupViewModel>(groups);
-            var groupResourceName = contact.ResourceName;
-            if (string.IsNullOrEmpty(groupResourceName))
+            if (string.IsNullOrEmpty(GroupResourceName))
                 return;
 
-            SelectedGroup = groups.FirstOrDefault(group => group.ResourceName == groupResourceName);
+            SelectedGroup = groups.FirstOrDefault(group => group.ResourceName == GroupResourceName);
+            IsChanged = false;
         }
 
         /// <summary>
         /// Наименование атрибута <see cref="Email"/>
         /// </summary>
         public static string EmailTitle => "Адрес электронной почты";
-
-        public string ETag { get; set; }
 
         /// <summary>
         /// Наименование атрибута <see cref="FamilyName"/>
@@ -99,8 +90,6 @@
         /// </summary>
         public static string PhoneNumberTitle => "Номер телефона";
 
-        public string ResourceName { get; set; }
-
         /// <summary>
         /// Выбранная группа.
         /// </summary>
@@ -110,14 +99,12 @@
             set
             {
                 _selectedGroup = value;
+                GroupResourceName = value?.ResourceName;
                 OnPropertyChanged();
             }
         }
 
-        /// <summary>
-        /// Заголовок окна.
-        /// </summary>
-        public static string WindowTitle => "Окно редактирования контакта";
+        
 
         public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] +
                                this[nameof(SelectedGroup)] + this[nameof(Organization)];
@@ -198,6 +185,8 @@
             }
         }
 
+        public string GroupResourceName { get; private set; }
+
         /// <summary>
         /// Организация. 
         /// </summary>
@@ -222,6 +211,38 @@
                 _phoneNumber = value;
                 OnPropertyChanged();
             }
+        }
+
+        public override void ApplyFrom(IContact contact, Operation operation)
+        {
+            base.ApplyFrom(contact, operation);
+            if (operation == Operation.Create)
+            {
+                Email = string.Empty;
+                FamilyName = string.Empty;
+                GivenName = string.Empty;
+                Organization = string.Empty;
+                PhoneNumber = string.Empty;
+                GroupResourceName = string.Empty;
+                ResourceName = string.Empty;
+                SelectedGroup = null;
+                return;
+            }
+
+            SetProperties(contact);
+        }
+
+        private void SetProperties(IContact contact)
+        {
+            if (!(contact is IPerson person))
+                return;
+
+            Email = person.Email;
+            FamilyName = person.FamilyName;
+            GivenName = person.GivenName;
+            Organization = person.Organization;
+            PhoneNumber = person.PhoneNumber;
+            GroupResourceName = person.GroupResourceName;
         }
     }
 }

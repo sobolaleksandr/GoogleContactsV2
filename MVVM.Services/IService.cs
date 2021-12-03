@@ -9,7 +9,7 @@
     /// Сервис для работы с контактами.
     /// </summary>
     /// <typeparam name="T"> Модель контакта. </typeparam>
-    public interface IService<in T> where T : Contact
+    public interface IService<in T> where T : IContact
     {
         /// <summary>
         /// Создать.
@@ -23,7 +23,7 @@
         /// </summary>
         /// <param name="model"> Модель контакта. </param>
         /// <returns> Сообщение об ошибке. </returns>
-        Task<string> DeleteAsync(T model);
+        Task<Contact> DeleteAsync(T model);
 
         /// <summary>
         /// Получить список контактов.

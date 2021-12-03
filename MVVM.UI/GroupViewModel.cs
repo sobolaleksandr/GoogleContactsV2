@@ -11,14 +11,17 @@
         /// </summary>
         private string _formattedName;
 
-        private int _memberCount;
-
         public GroupViewModel(IContact contact) : base(contact)
+        {
+            SetProperties(contact);
+            IsChanged = false;
+        }
+
+        private void SetProperties(IContact contact)
         {
             if (!(contact is IGroup group))
                 return;
 
-            ApplyCommand = new ApplyCommand(contact);
             FormattedName = group.FormattedName;
             MemberCount = group.MemberCount;
         }
@@ -61,22 +64,20 @@
             }
         }
 
-        public override void ApplyFrom(IContact contact)
-        {
-            if (!(contact is GroupViewModel group))
-                return;
+        public int MemberCount { get; private set; }
 
-            FormattedName = group.FormattedName;
-        }
-
-        public int MemberCount
+        public override void ApplyFrom(IContact contact, Operation operation)
         {
-            get => _memberCount;
-            set
+            base.ApplyFrom(contact, operation);
+            if (operation == Operation.Create)
             {
-                _memberCount = value;
-                OnPropertyChanged();
+                FormattedName = string.Empty;
+                ResourceName = string.Empty;
+                ETag = string.Empty;
+                return;
             }
+
+            SetProperties(contact);
         }
     }
 }

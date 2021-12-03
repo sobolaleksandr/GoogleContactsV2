@@ -5,13 +5,13 @@
         /// <summary>
         /// Идентификатор модели.
         /// </summary>
-        string ETag { get; set; }
+        string ETag { get; }
 
         /// <summary>
         /// Наименование ресурса.
         /// </summary>
-        string ResourceName { get; set; }
+        string ResourceName { get; }
 
-        void ApplyFrom(IContact contact);
+        public Operation Operation { get; }
     }
 }

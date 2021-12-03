@@ -1,6 +1,6 @@
 ﻿namespace MVVM.Models
 {
-    public interface IPerson
+    public interface IPerson : IContact
     {
         /// <summary>
         /// Адрес электронной почты. 
@@ -16,6 +16,11 @@
         /// Имя.
         /// </summary>
         string GivenName { get; }
+
+        /// <summary>
+        /// Членство в группах.
+        /// </summary>
+        public string GroupResourceName { get; }
 
         /// <summary>
         /// Организация. 

@@ -8,16 +8,16 @@
 
     using MVVM.Models;
 
-    public class PeopleServiceMock : IService<Person>
+    public class PeopleServiceMock : IService<IPerson>
     {
-        public async Task<Contact> CreateAsync(Person model)
+        public async Task<Contact> CreateAsync(IPerson model)
         {
-            return await Task.FromResult(model);
+            return await Task.FromResult(new Contact());
         }
 
-        public async Task<string> DeleteAsync(Person model)
+        public async Task<Contact> DeleteAsync(IPerson model)
         {
-            return await Task.FromResult(string.Empty);
+            return await Task.FromResult(new Contact());
         }
 
         public async Task<List<IContact>> GetAsync()
@@ -39,9 +39,9 @@
             return await Task.FromResult(models);
         }
 
-        public async Task<Contact> UpdateAsync(Person model)
+        public async Task<Contact> UpdateAsync(IPerson model)
         {
-            return await Task.FromResult(model);
+            return await Task.FromResult(new Contact());
         }
     }
 }

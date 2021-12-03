@@ -1,7 +1,5 @@
 ﻿namespace MVVM.Services
 {
-    using System;
-
     using MVVM.Models;
 
     /// <summary>
@@ -9,11 +7,6 @@
     /// </summary>
     public class Contact : IContact
     {
-        /// <summary>
-        /// Идентификатор модели.
-        /// </summary>
-        public string ETag { get; set; }
-
         /// <summary>
         /// Базовая модель контакта.
         /// </summary>
@@ -29,12 +22,15 @@
         public string Error { get; }
 
         /// <summary>
+        /// Идентификатор модели.
+        /// </summary>
+        public string ETag { get; protected set; }
+
+        /// <summary>
         /// Наименование ресурса.
         /// </summary>
-        public string ResourceName { get; set; }
+        public string ResourceName { get; protected set; }
 
-        public virtual void ApplyFrom(IContact contact)
-        {
-        }
+        public Operation Operation { get; }
     }
 }

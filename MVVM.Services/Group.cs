@@ -24,35 +24,14 @@
             FormattedName = group.FormattedName ?? string.Empty;
         }
 
-        public override void ApplyFrom(IContact contact)
-        {
-            if (!(contact is IGroup group))
-                return;
-
-            FormattedName = group.FormattedName;
-        }
-
-        /// <summary>
-        /// Преобразовать в объект для работы с GoogleContacts. 
-        /// </summary>
-        /// <returns> Объект для работы с GoogleContacts. </returns>
-        public ContactGroup Map()
-        {
-            return new ContactGroup
-            {
-                Name = FormattedName ?? string.Empty,
-                ETag = ETag ?? string.Empty
-            };
-        }
-
         /// <summary>
         /// Наименование.
         /// </summary>
-        public string FormattedName { get; set; }
+        public string FormattedName { get; }
 
         /// <summary>
         /// Количество членов группы.
         /// </summary>
-        public int MemberCount { get; set; }
+        public int MemberCount { get; }
     }
 }

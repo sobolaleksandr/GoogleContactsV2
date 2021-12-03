@@ -8,16 +8,16 @@
 
     using MVVM.Models;
 
-    public class GroupServiceMock : IService<Group>
+    public class GroupServiceMock : IService<IGroup>
     {
-        public async Task<Contact> CreateAsync(Group model)
+        public async Task<Contact> CreateAsync(IGroup model)
         {
-            return await Task.FromResult(model);
+            return await Task.FromResult(new Contact());
         }
 
-        public async Task<string> DeleteAsync(Group model)
+        public async Task<Contact> DeleteAsync(IGroup model)
         {
-            return await Task.FromResult(string.Empty);
+            return await Task.FromResult(new Contact());
         }
 
         public async Task<List<IContact>> GetAsync()
@@ -29,9 +29,9 @@
             return await Task.FromResult(models);
         }
 
-        public async Task<Contact> UpdateAsync(Group model)
+        public async Task<Contact> UpdateAsync(IGroup model)
         {
-            return await Task.FromResult(model);
+            return await Task.FromResult(new Contact());
         }
     }
 }

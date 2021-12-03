@@ -1,43 +1,51 @@
 ﻿namespace MVVM.UI
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
-
-    using MVVM.Models;
 
     /// <summary>
     /// Вью-модель приложения. 
     /// </summary>
     public class ApplicationViewModel : ViewModelBase
     {
-        private IContact _selectedGroup;
-        private IContact _selectedPerson;
-        private bool _peopleTabSelected;
+        private bool _peopleTabTabSelected;
+        private GroupViewModel _selectedGroup;
+        private PersonViewModel _selectedPerson;
 
-        public ApplicationViewModel(IReadOnlyCollection<PersonViewModel> peopleVm,
-            IReadOnlyCollection<GroupViewModel> groupsVm)
+        public ApplicationViewModel(List<PersonViewModel> peopleVm,
+            List<GroupViewModel> groupsVm, bool peopleTabSelected)
         {
-            People.AddRange(peopleVm);
-            Groups.AddRange(groupsVm);
+            People = new ObservableCollection<PersonViewModel>(peopleVm);
+            Groups = new ObservableCollection<GroupViewModel>(groupsVm);
 
             SelectedPerson = peopleVm.FirstOrDefault();
             SelectedGroup = groupsVm.FirstOrDefault();
+            PeopleTabTabSelected = peopleTabSelected;
         }
 
-        public ObservableCollectionRange<ContactViewModel> Groups { get; set; } =
-            new ObservableCollectionRange<ContactViewModel>();
+        public ObservableCollection<GroupViewModel> Groups { get; }
 
         public static string GroupTitle => "Группы";
 
         /// <summary>
         /// Контакты. 
         /// </summary>
-        public ObservableCollectionRange<ContactViewModel> People { get; } =
-            new ObservableCollectionRange<ContactViewModel>();
+        public ObservableCollection<PersonViewModel> People { get; }
+
+        public bool PeopleTabTabSelected
+        {
+            get => _peopleTabTabSelected;
+            set
+            {
+                _peopleTabTabSelected = value;
+                OnPropertyChanged();
+            }
+        }
 
         public static string PeopleTitle => "Контакты";
 
-        public IContact SelectedGroup
+        public GroupViewModel SelectedGroup
         {
             get => _selectedGroup;
             set
@@ -47,7 +55,7 @@
             }
         }
 
-        public IContact SelectedPerson
+        public PersonViewModel SelectedPerson
         {
             get => _selectedPerson;
             set
@@ -61,15 +69,5 @@
         /// Заголовок окна.
         /// </summary>
         public static string WindowTitle => "GoogleContacts";
-
-        public bool PeopleTabSelected
-        {
-            get => _peopleTabSelected;
-            set
-            {
-                _peopleTabSelected = value;
-                OnPropertyChanged();
-            }
-        }
     }
 }

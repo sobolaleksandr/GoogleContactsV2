@@ -20,7 +20,7 @@
     </Window.Resources>
 
     <TabControl>
-        <TabItem Header="{Binding PeopleTitle}" IsSelected="{Binding PeopleTabSelected}">
+        <TabItem Header="{Binding PeopleTitle}" IsSelected="{Binding PeopleTabTabSelected}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -28,12 +28,11 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" Grid.Column="1" Background="LightGreen" />
-                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="DeepSkyBlue" />
 
                 <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding People}"
                          SelectedItem="{Binding SelectedPerson}">
@@ -48,20 +47,11 @@
                     Grid.Column="1" Grid.Row="0"
                     DataContext="{Binding SelectedPerson}" />
 
-                <StackPanel Grid.IsSharedSizeScope="True" Grid.Row="1"
-                            Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal"
-                            HorizontalAlignment="Right">
-                    <Button Content="Принять"
-                            local:DialogResultButton.DialogResult="True" />
-                    <Button Content="Создать" />
-                    <Button Content="Отменить"
-                            local:DialogResultButton.DialogResult="False" />
-                </StackPanel>
             </Grid>
         </TabItem>
         <TabItem
             Header="{Binding GroupTitle}"
-            IsSelected="{Binding PeopleTabSelected, Converter={StaticResource InvertBooleanConverter}}">
+            IsSelected="{Binding PeopleTabTabSelected, Converter={StaticResource InvertBooleanConverter}}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -70,10 +60,9 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" Background="LightGreen" />
+                <Border Grid.Row="0" Grid.Column="1" Background="LightGreen" />
 
                 <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Groups}"
                          SelectedItem="{Binding SelectedGroup}">
@@ -85,26 +74,9 @@
                 </ListBox>
 
                 <local:EditGroupControl
-                    Grid.Column="1" Grid.Row="0" Grid.RowSpan="2"
+                    Grid.Column="1" Grid.Row="0"
                     DataContext="{Binding SelectedGroup}" />
-
-                <StackPanel Grid.IsSharedSizeScope="True" Grid.Row="1"
-                            Grid.Column="1" Orientation="Horizontal"
-                            HorizontalAlignment="Left">
-                    <Button Content="{Binding PeopleTitle}"
-                            local:DialogResultButton.DialogResult="True" />
-                    <Button Content="{Binding GroupTitle}"
-                            local:DialogResultButton.DialogResult="False" />
-                </StackPanel>
             </Grid>
         </TabItem>
-        <!--<StackPanel Grid.IsSharedSizeScope="True"  Grid.Row="1" Grid.Column="0" Orientation="Horizontal" 
-                HorizontalAlignment="Left">
-        <Button Content="{Binding PeopleTitle}"
-                local:DialogResultButton.DialogResult="True"/>
-        <Button Content="{Binding GroupTitle}"
-                local:DialogResultButton.DialogResult="False" />
-    </StackPanel>-->
     </TabControl>
-
 </Window>

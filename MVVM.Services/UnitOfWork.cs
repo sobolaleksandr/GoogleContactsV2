@@ -7,6 +7,7 @@
     using Google.Apis.PeopleService.v1;
     using Google.Apis.Services;
 
+    using MVVM.Models;
 
     /// <summary>
     /// Единица работы для контактов и групп.
@@ -24,7 +25,7 @@
         /// <summary>
         /// Ресурсы освобождены.
         /// </summary>
-        private bool _disposed;
+        public bool Disposed { get; private set; }
 
         /// <summary>
         /// Единица работы для контактов и групп.
@@ -58,12 +59,12 @@
         /// <summary>
         /// Сервис для работы с группами.
         /// </summary>
-        public IService<Group> GroupService { get; private set; }
+        public IService<IGroup> GroupService { get; private set; }
 
         /// <summary>
         /// Сервис для работы с контактами.
         /// </summary>
-        public IService<Person> PeopleService { get; private set; }
+        public IService<IPerson> PeopleService { get; private set; }
 
         public void Dispose()
         {
@@ -93,11 +94,11 @@
         /// </summary>
         private void Dispose(bool disposing)
         {
-            if (_disposed)
+            if (Disposed)
                 return;
 
             _service?.Dispose();
-            _disposed = true;
+            Disposed = true;
         }
 
         ~UnitOfWork()

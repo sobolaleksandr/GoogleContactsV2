@@ -14,7 +14,7 @@
     /// <summary>
     /// Сервия для работы с <see cref="Group"/>
     /// </summary>
-    public class GroupService : IService<Group>
+    public class GroupService : IService<IGroup>
     {
         /// <summary>
         /// Ресурс для работы с <see cref="Group"/> 
@@ -30,12 +30,25 @@
             _groupsResource = new ContactGroupsResource(service);
         }
 
-        public async Task<Contact> CreateAsync(Group model)
+        /// <summary>
+        /// Преобразовать в объект для работы с GoogleContacts. 
+        /// </summary>
+        /// <returns> Объект для работы с GoogleContacts. </returns>
+        private static ContactGroup Map(IGroup group)
+        {
+            return new ContactGroup
+            {
+                Name = group.FormattedName ?? string.Empty,
+                ETag = group.ETag ?? string.Empty
+            };
+        }
+
+        public async Task<Contact> CreateAsync(IGroup model)
         {
             if (model == null)
                 return new Contact("Empty model");
 
-            var group = model.Map();
+            var group = Map(model);
             var request = new CreateContactGroupRequest
             {
                 ContactGroup = group
@@ -56,21 +69,21 @@
             }
         }
 
-        public async Task<string> DeleteAsync(Group model)
+        public async Task<Contact> DeleteAsync(IGroup model)
         {
             if (model == null)
-                return "Empty model";
+                return new Contact("Empty model");
 
             var request = _groupsResource.Delete(model.ResourceName);
 
             try
             {
                 await request.ExecuteAsync();
-                return string.Empty;
+                return new Contact();
             }
             catch (Exception exception)
             {
-                return exception.ToString();
+                return new Contact(exception.ToString());
             }
         }
 
@@ -92,15 +105,15 @@
             }
         }
 
-        public async Task<Contact> UpdateAsync(Group model)
+        public async Task<Contact> UpdateAsync(IGroup model)
         {
             if (model == null)
                 return new Contact("Empty model");
 
             var request = new UpdateContactGroupRequest
             {
-                ContactGroup = model.Map()
-            };
+                ContactGroup = Map(model)
+        };
 
             var updateRequest = _groupsResource.Update(request, model.ResourceName);
 
