@@ -4,6 +4,8 @@
     using System.Collections.ObjectModel;
     using System.Linq;
 
+    using MVVM.Models;
+
     /// <summary>
     /// Вью-модель приложения. 
     /// </summary>
@@ -22,7 +24,33 @@
             SelectedPerson = peopleVm.FirstOrDefault();
             SelectedGroup = groupsVm.FirstOrDefault();
             PeopleTabTabSelected = peopleTabSelected;
+
+            CreatePersonCommand = new RelayCommand(obj =>
+            {
+                var vm = new PersonViewModel(null, Groups);
+                People.Add(vm);
+                SelectedPerson = vm;
+            });
+
+            DeletePersonCommand = new RelayCommand(obj =>
+                {
+                    if (obj is PersonViewModel person)
+                        People.Remove(person);
+                },
+                obj => People.Count > 0);
+            UpdatePersonCommand = new UpdateCommand(SelectedPerson, Operation.Update);
         }
+
+        protected override void OnPropertyChanged(string propertyName = null)
+        {
+            SelectedPerson.IsChanged = true;
+            base.OnPropertyChanged(propertyName);
+            UpdatePersonCommand?.RaiseCanExecuteChanged();
+        }
+
+        public RelayCommand DeletePersonCommand { get; }
+        public UpdateCommand UpdatePersonCommand { get; }
+        public RelayCommand CreatePersonCommand { get; }
 
         public ObservableCollection<GroupViewModel> Groups { get; }
 

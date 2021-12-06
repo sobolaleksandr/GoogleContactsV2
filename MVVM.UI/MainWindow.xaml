@@ -20,7 +20,9 @@
     </Window.Resources>
 
     <TabControl>
-        <TabItem Header="{Binding PeopleTitle}" IsSelected="{Binding PeopleTabTabSelected}">
+        <TabItem 
+            Header="{Binding PeopleTitle}" 
+            IsSelected="{Binding PeopleTabTabSelected}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
@@ -33,6 +35,7 @@
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" Grid.Column="1" Background="LightGreen" />
+                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="LightBlue" />
 
                 <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding People}"
                          SelectedItem="{Binding SelectedPerson}">
@@ -45,8 +48,17 @@
 
                 <local:EditPersonControl
                     Grid.Column="1" Grid.Row="0"
-                    DataContext="{Binding SelectedPerson}" />
+                    DataContext="{Binding SelectedPerson}"/>
 
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Принять"
+                            Command="{Binding UpdatePersonCommand}" />
+                    <Button Content="Создать"
+                            Command="{Binding CreatePersonCommand}" />
+                    <Button Content="Удалить"
+                            Command="{Binding DeletePersonCommand}" 
+                            CommandParameter="{Binding SelectedPerson}"/>
+                </StackPanel>
             </Grid>
         </TabItem>
         <TabItem
@@ -60,9 +72,11 @@
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Border Grid.Row="0" Grid.Column="1" Background="LightGreen" />
+                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="LightBlue" />
 
                 <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Groups}"
                          SelectedItem="{Binding SelectedGroup}">

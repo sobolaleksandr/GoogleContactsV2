@@ -1,6 +1,7 @@
 ﻿namespace MVVM.App
 {
     using System;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -18,10 +19,11 @@
             var groupService = unitOfWork.GroupService;
             var groups = await groupService.GetAsync();
             var groupsVm = groups.Select(group => new GroupViewModel(group)).ToList();
+            var observedGroups = new ObservableCollection<GroupViewModel>(groupsVm);
 
             var peopleService = unitOfWork.PeopleService;
             var people = await peopleService.GetAsync();
-            var peopleVm = people.Select(person => new PersonViewModel(person, groupsVm)).ToList();
+            var peopleVm = people.Select(person => new PersonViewModel(person, observedGroups)).ToList();
 
             return new ApplicationViewModel(peopleVm, groupsVm, _peopleSelected);
         }

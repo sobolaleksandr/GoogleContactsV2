@@ -58,7 +58,8 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <Label Grid.Row="2" Grid.Column="0" Content="{Binding GivenNameTitle}" Style="{StaticResource LabelStyle}" />
+            <Label Grid.Row="2" Grid.Column="0" Content="{Binding GivenNameTitle}" 
+                   Style="{StaticResource LabelStyle}" />
             <TextBox Grid.Row="2" Grid.Column="1"
                      Validation.ErrorTemplate="{StaticResource ValidationFailed}">
                 <TextBox.Text>

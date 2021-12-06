@@ -1,7 +1,5 @@
 ﻿namespace MVVM.UI
 {
-    using System;
-
     using MVVM.Models;
 
     public abstract class ContactViewModel : ViewModelBase, IContact
@@ -17,7 +15,7 @@
         protected ContactViewModel(IContact contact)
         {
             if (contact == null)
-                throw new ArgumentNullException(nameof(contact));
+                return;
 
             ResourceName = contact.ResourceName;
             ETag = contact.ETag;
@@ -37,7 +35,7 @@
 
         public UpdateCommand DeleteCommand { get; }
 
-        public bool IsChanged { get; protected set; }
+        public bool IsChanged { get; set; }
 
         /// <summary>
         /// Наименование модели.

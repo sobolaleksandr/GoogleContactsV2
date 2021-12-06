@@ -1,6 +1,5 @@
 ﻿namespace MVVM.UI
 {
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
@@ -44,10 +43,16 @@
         /// </summary>
         /// <param name="contact"> </param>
         /// <param name="groups"> Группы. </param>
-        public PersonViewModel(IContact contact, List<GroupViewModel> groups) : base(contact)
+        public PersonViewModel(IContact contact, ObservableCollection<GroupViewModel> groups) : base(contact)
         {
+            Groups = groups;
+            if (contact == null)
+            {
+                CreateContact();
+                return;
+            }
+
             SetProperties(contact);
-            Groups = new ObservableCollection<GroupViewModel>(groups);
             if (string.IsNullOrEmpty(GroupResourceName))
                 return;
 
@@ -73,7 +78,7 @@
         /// <summary>
         /// Группы.
         /// </summary>
-        public ObservableCollection<GroupViewModel> Groups { get; set; }
+        public ObservableCollection<GroupViewModel> Groups { get; }
 
         /// <summary>
         /// Наименование атрибута <see cref="Groups"/>
@@ -103,8 +108,6 @@
                 OnPropertyChanged();
             }
         }
-
-        
 
         public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] +
                                this[nameof(SelectedGroup)] + this[nameof(Organization)];
@@ -218,18 +221,23 @@
             base.ApplyFrom(contact, operation);
             if (operation == Operation.Create)
             {
-                Email = string.Empty;
-                FamilyName = string.Empty;
-                GivenName = string.Empty;
-                Organization = string.Empty;
-                PhoneNumber = string.Empty;
-                GroupResourceName = string.Empty;
-                ResourceName = string.Empty;
-                SelectedGroup = null;
+                CreateContact();
                 return;
             }
 
             SetProperties(contact);
+        }
+
+        private void CreateContact()
+        {
+            Email = string.Empty;
+            FamilyName = string.Empty;
+            GivenName = string.Empty;
+            Organization = string.Empty;
+            PhoneNumber = string.Empty;
+            GroupResourceName = string.Empty;
+            ResourceName = string.Empty;
+            IsChanged = false;
         }
 
         private void SetProperties(IContact contact)
