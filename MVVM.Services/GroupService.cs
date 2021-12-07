@@ -43,7 +43,7 @@
             };
         }
 
-        public async Task<Contact> CreateAsync(IGroup model)
+        public async Task<IContact> CreateAsync(IGroup model)
         {
             if (model == null)
                 return new Contact("Empty model");
@@ -69,7 +69,7 @@
             }
         }
 
-        public async Task<Contact> DeleteAsync(IGroup model)
+        public async Task<IContact> DeleteAsync(IGroup model)
         {
             if (model == null)
                 return new Contact("Empty model");
@@ -105,7 +105,7 @@
             }
         }
 
-        public async Task<Contact> UpdateAsync(IGroup model)
+        public async Task<IContact> UpdateAsync(IGroup model)
         {
             if (model == null)
                 return new Contact("Empty model");

@@ -10,12 +10,12 @@
 
     public class PeopleServiceMock : IService<IPerson>
     {
-        public async Task<Contact> CreateAsync(IPerson model)
+        public async Task<IContact> CreateAsync(IPerson model)
         {
             return await Task.FromResult(new Contact());
         }
 
-        public async Task<Contact> DeleteAsync(IPerson model)
+        public async Task<IContact> DeleteAsync(IPerson model)
         {
             return await Task.FromResult(new Contact());
         }
@@ -39,7 +39,7 @@
             return await Task.FromResult(models);
         }
 
-        public async Task<Contact> UpdateAsync(IPerson model)
+        public async Task<IContact> UpdateAsync(IPerson model)
         {
             return await Task.FromResult(new Contact());
         }

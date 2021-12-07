@@ -31,6 +31,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0" Content="{Binding EmailTitle}" 
                    Style="{StaticResource LabelStyle}" />
@@ -106,8 +107,11 @@
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
+            <StackPanel Grid.Row="6" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Принять"
+                        Command="{Binding UpdateCommand}"
+                        CommandParameter="{Binding}"/>
+            </StackPanel>
         </Grid>
-        
-        <ui:EditButtonsControl Grid.Row="1" />
     </Grid>
 </UserControl>

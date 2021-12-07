@@ -1,5 +1,7 @@
 ﻿namespace MVVM.UI
 {
+    using System.Runtime.CompilerServices;
+
     using MVVM.Models;
 
     public abstract class ContactViewModel : ViewModelBase, IContact
@@ -14,28 +16,26 @@
         /// </summary>
         protected ContactViewModel(IContact contact)
         {
+            UpdateCommand = new UpdateCommand(this, Operation.Update);
             if (contact == null)
                 return;
 
+            ApplyFrom(contact);
+        }
+
+        private void ApplyFrom(IContact contact)
+        {
             ResourceName = contact.ResourceName;
             ETag = contact.ETag;
             Name = contact switch
             {
                 IPerson person => person.GivenName + " (" + person.PhoneNumber + ")",
-                IGroup group => group.FormattedName + " (" + group.MemberCount + ")",
+                IGroup group => @group.FormattedName + " (" + @group.MemberCount + ")",
                 _ => Name,
             };
-
-            CreateCommand = new UpdateCommand(this, Operation.Create);
-            UpdateCommand = new UpdateCommand(this, Operation.Update);
-            DeleteCommand = new UpdateCommand(this, Operation.Delete);
         }
 
-        public UpdateCommand CreateCommand { get; }
-
-        public UpdateCommand DeleteCommand { get; }
-
-        public bool IsChanged { get; set; }
+        public UpdateCommand UpdateCommand { get; }
 
         /// <summary>
         /// Наименование модели.
@@ -50,7 +50,11 @@
             }
         }
 
-        public UpdateCommand UpdateCommand { get; }
+        public override void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            base.OnPropertyChanged(propertyName);
+            UpdateCommand?.RaiseCanExecuteChanged();
+        }
 
         public string ETag { get; set; }
 
@@ -62,13 +66,7 @@
         {
             if (Operation != Operation.Create)
                 Operation = operation;
-        }
-
-        protected override void OnPropertyChanged(string propertyName = null)
-        {
-            IsChanged = true;
-            base.OnPropertyChanged(propertyName);
-            UpdateCommand?.RaiseCanExecuteChanged();
+            ApplyFrom(contact);
         }
     }
 }

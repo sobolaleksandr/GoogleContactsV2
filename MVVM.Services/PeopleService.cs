@@ -34,7 +34,7 @@
             _service = service;
         }
 
-        public async Task<Contact> CreateAsync(IPerson model)
+        public async Task<IContact> CreateAsync(IPerson model)
         {
             if (model == null)
                 return new Contact("Empty model");
@@ -55,7 +55,7 @@
             }
         }
 
-        public async Task<Contact> DeleteAsync(IPerson model)
+        public async Task<IContact> DeleteAsync(IPerson model)
         {
             if (model == null)
                 return new Contact("Empty model");
@@ -92,7 +92,7 @@
             }
         }
 
-        public async Task<Contact> UpdateAsync(IPerson model)
+        public async Task<IContact> UpdateAsync(IPerson model)
         {
             if (model == null)
                 return new Contact("Empty model");

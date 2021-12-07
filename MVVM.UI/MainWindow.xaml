@@ -90,6 +90,16 @@
                 <local:EditGroupControl
                     Grid.Column="1" Grid.Row="0"
                     DataContext="{Binding SelectedGroup}" />
+
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Принять"
+                            Command="{Binding UpdateGroupCommand}" />
+                    <Button Content="Создать"
+                            Command="{Binding CreateGroupCommand}" />
+                    <Button Content="Удалить"
+                            Command="{Binding DeleteGroupCommand}" 
+                            CommandParameter="{Binding SelectedGroup}"/>
+                </StackPanel>
             </Grid>
         </TabItem>
     </TabControl>

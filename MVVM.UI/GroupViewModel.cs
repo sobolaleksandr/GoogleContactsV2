@@ -13,8 +13,13 @@
 
         public GroupViewModel(IContact contact) : base(contact)
         {
+            if (contact == null)
+            {
+                CreateContact();
+                return;
+            }
+
             SetProperties(contact);
-            IsChanged = false;
         }
 
         private void SetProperties(IContact contact)
@@ -71,13 +76,18 @@
             base.ApplyFrom(contact, operation);
             if (operation == Operation.Create)
             {
-                FormattedName = string.Empty;
-                ResourceName = string.Empty;
-                ETag = string.Empty;
+                CreateContact();
                 return;
             }
 
             SetProperties(contact);
+        }
+
+        private void CreateContact()
+        {
+            FormattedName = string.Empty;
+            ResourceName = string.Empty;
+            ETag = string.Empty;
         }
     }
 }

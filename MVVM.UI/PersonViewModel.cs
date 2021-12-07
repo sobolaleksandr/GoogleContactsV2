@@ -57,7 +57,6 @@
                 return;
 
             SelectedGroup = groups.FirstOrDefault(group => group.ResourceName == GroupResourceName);
-            IsChanged = false;
         }
 
         /// <summary>
@@ -237,7 +236,6 @@
             PhoneNumber = string.Empty;
             GroupResourceName = string.Empty;
             ResourceName = string.Empty;
-            IsChanged = false;
         }
 
         private void SetProperties(IContact contact)

@@ -1,9 +1,7 @@
-﻿namespace MVVM.Services
+﻿namespace MVVM.Models
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
-    using MVVM.Models;
 
     /// <summary>
     /// Сервис для работы с контактами.
@@ -16,14 +14,14 @@
         /// </summary>
         /// <param name="model"> Модель контакта. </param>
         /// <returns> Модель контакта. </returns>
-        Task<Contact> CreateAsync(T model);
+        Task<IContact> CreateAsync(T model);
 
         /// <summary>
         /// Удалить. 
         /// </summary>
         /// <param name="model"> Модель контакта. </param>
         /// <returns> Сообщение об ошибке. </returns>
-        Task<Contact> DeleteAsync(T model);
+        Task<IContact> DeleteAsync(T model);
 
         /// <summary>
         /// Получить список контактов.
@@ -36,6 +34,6 @@
         /// </summary>
         /// <param name="model"> Модель контакта. </param>
         /// <returns> Модель контакта. </returns>
-        Task<Contact> UpdateAsync(T model);
+        Task<IContact> UpdateAsync(T model);
     }
 }

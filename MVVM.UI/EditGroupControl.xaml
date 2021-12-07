@@ -40,7 +40,11 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Принять"
+                        Command="{Binding UpdateCommand}"
+                        CommandParameter="{Binding}"/>
+            </StackPanel>
         </Grid>
-        <local:EditButtonsControl Grid.Row="1" />
     </Grid>
 </UserControl>

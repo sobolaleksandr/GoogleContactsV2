@@ -1,7 +1,5 @@
-﻿namespace MVVM.Services
+﻿namespace MVVM.Models
 {
-    using MVVM.Models;
-
     /// <summary>
     /// Базовая модель контакта.
     /// </summary>

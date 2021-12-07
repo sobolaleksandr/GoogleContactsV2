@@ -19,13 +19,10 @@
 
         public bool CanExecute(object parameter)
         {
-            if (_operation != Operation.Update)
-                return true;
+            if (parameter is IDataErrorInfo vm)
+                return string.IsNullOrWhiteSpace(vm.Error);
 
-            if (!(_contact is IDataErrorInfo vm))
-                return false;
-
-            return string.IsNullOrWhiteSpace(vm.Error) && _contact.IsChanged;
+            return false;
         }
 
         public event EventHandler CanExecuteChanged;

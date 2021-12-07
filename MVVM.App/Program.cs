@@ -13,7 +13,6 @@
     internal static class Program
     {
         private const bool DEBUG = true;
-        private static bool _peopleSelected;
         private static async Task<ApplicationViewModel> CreateApplicationVm(UnitOfWork unitOfWork)
         {
             var groupService = unitOfWork.GroupService;
@@ -25,7 +24,7 @@
             var people = await peopleService.GetAsync();
             var peopleVm = people.Select(person => new PersonViewModel(person, observedGroups)).ToList();
 
-            return new ApplicationViewModel(peopleVm, groupsVm, _peopleSelected);
+            return new ApplicationViewModel(peopleVm, groupsVm, groupService);
         }
 
         [STAThread]
@@ -46,12 +45,12 @@
                 if (window.ShowDialog() != true)
                     return;
 
-                _peopleSelected = vm.PeopleTabTabSelected;
                 Task.Run(async () => await UpdateData(vm, unitOfWork)).GetAwaiter().GetResult();
             }
         }
 
-        private static async Task<Contact> Update<T>(T contact, IService<T> service) where T : IContact
+
+        private static async Task<IContact> Update<T>(T contact, IService<T> service) where T : IContact
         {
             return contact.Operation switch
             {
@@ -62,7 +61,6 @@
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
-
 
         private static async Task UpdateData(ApplicationViewModel applicationViewModel, UnitOfWork unitOfWork)
         {
@@ -100,9 +98,12 @@
         /// </summary>
         /// <param name="result"> Результат операции. </param>
         /// <returns> True, если проверка пройдена. </returns>
-        private static bool ValidateResult(Contact result)
+        private static bool ValidateResult(IContact result)
         {
-            var error = result.Error;
+            if (!(result is Contact contact))
+                return false;
+
+            var error = contact.Error;
             return ValidateError(error);
         }
     }

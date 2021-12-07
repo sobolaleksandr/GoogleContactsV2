@@ -10,12 +10,12 @@
 
     public class GroupServiceMock : IService<IGroup>
     {
-        public async Task<Contact> CreateAsync(IGroup model)
+        public async Task<IContact> CreateAsync(IGroup model)
         {
             return await Task.FromResult(new Contact());
         }
 
-        public async Task<Contact> DeleteAsync(IGroup model)
+        public async Task<IContact> DeleteAsync(IGroup model)
         {
             return await Task.FromResult(new Contact());
         }
@@ -29,7 +29,7 @@
             return await Task.FromResult(models);
         }
 
-        public async Task<Contact> UpdateAsync(IGroup model)
+        public async Task<IContact> UpdateAsync(IGroup model)
         {
             return await Task.FromResult(new Contact());
         }
