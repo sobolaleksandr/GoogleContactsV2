@@ -1,5 +1,7 @@
 ﻿namespace MVVM.UI
 {
+    using MVVM.UI.ViewModels;
+
     /// <summary>
     /// Базовая вью-модель с результатом диалога.
     /// </summary>

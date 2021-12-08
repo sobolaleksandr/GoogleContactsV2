@@ -30,19 +30,6 @@
             _groupsResource = new ContactGroupsResource(service);
         }
 
-        /// <summary>
-        /// Преобразовать в объект для работы с GoogleContacts. 
-        /// </summary>
-        /// <returns> Объект для работы с GoogleContacts. </returns>
-        private static ContactGroup Map(IGroup group)
-        {
-            return new ContactGroup
-            {
-                Name = group.FormattedName ?? string.Empty,
-                ETag = group.ETag ?? string.Empty
-            };
-        }
-
         public async Task<IContact> CreateAsync(IGroup model)
         {
             if (model == null)
@@ -94,7 +81,7 @@
             try
             {
                 var response = await request.ExecuteAsync();
-                var groups = response.ContactGroups.Where(group => group.GroupType != "SYSTEM_CONTACT_GROUP");
+                var groups = response.ContactGroups.Where(group => group.GroupType != "SYSTEM_CONTACT_GROUP").ToList();
                 return groups
                     .Select(group => (IContact)new Group(group))
                     .ToList();
@@ -113,13 +100,15 @@
             var request = new UpdateContactGroupRequest
             {
                 ContactGroup = Map(model)
-        };
+            };
 
             var updateRequest = _groupsResource.Update(request, model.ResourceName);
 
             try
             {
-                var response = await updateRequest.ExecuteAsync();
+                var updateResponse = await updateRequest.ExecuteAsync();
+                var getRequest = _groupsResource.Get(updateResponse?.ResourceName);
+                var response = await getRequest.ExecuteAsync();
                 return response != null
                     ? new Group(response)
                     : new Contact("Unexpected error");
@@ -128,6 +117,19 @@
             {
                 return new Contact(exception.ToString());
             }
+        }
+
+        /// <summary>
+        /// Преобразовать в объект для работы с GoogleContacts. 
+        /// </summary>
+        /// <returns> Объект для работы с GoogleContacts. </returns>
+        private static ContactGroup Map(IGroup group)
+        {
+            return new ContactGroup
+            {
+                Name = group.FormattedName ?? string.Empty,
+                ETag = group.ETag ?? string.Empty
+            };
         }
     }
 }

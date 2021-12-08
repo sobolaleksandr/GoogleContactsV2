@@ -1,4 +1,4 @@
-﻿namespace MVVM.UI
+﻿namespace MVVM.UI.ViewModels
 {
     using System.Collections.ObjectModel;
     using System.ComponentModel;
@@ -215,15 +215,9 @@
             }
         }
 
-        public override void ApplyFrom(IContact contact, Operation operation)
+        public override void ApplyFrom(IContact contact)
         {
-            base.ApplyFrom(contact, operation);
-            if (operation == Operation.Create)
-            {
-                CreateContact();
-                return;
-            }
-
+            base.ApplyFrom(contact);
             SetProperties(contact);
         }
 
@@ -236,6 +230,7 @@
             PhoneNumber = string.Empty;
             GroupResourceName = string.Empty;
             ResourceName = string.Empty;
+            IsCreated = true;
         }
 
         private void SetProperties(IContact contact)

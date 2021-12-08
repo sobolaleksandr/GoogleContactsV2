@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:MVVM.UI"
-             mc:Ignorable="d" d:DataContext="{d:DesignInstance local:GroupViewModel}">
+             xmlns:viewModels="clr-namespace:MVVM.UI.ViewModels"
+             mc:Ignorable="d" d:DataContext="{d:DesignInstance viewModels:GroupViewModel}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -40,11 +40,6 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Принять"
-                        Command="{Binding UpdateCommand}"
-                        CommandParameter="{Binding}"/>
-            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

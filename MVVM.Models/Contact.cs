@@ -28,7 +28,5 @@
         /// Наименование ресурса.
         /// </summary>
         public string ResourceName { get; protected set; }
-
-        public Operation Operation { get; }
     }
 }

@@ -4,17 +4,15 @@
     using System.ComponentModel;
     using System.Windows.Input;
 
-    using MVVM.Models;
+    using MVVM.UI.ViewModels;
 
     public class UpdateCommand : ICommand
     {
         private readonly ContactViewModel _contact;
-        private readonly Operation _operation;
 
-        public UpdateCommand(ContactViewModel contact, Operation operation)
+        public UpdateCommand(ContactViewModel contact)
         {
             _contact = contact;
-            _operation = operation;
         }
 
         public bool CanExecute(object parameter)
@@ -29,7 +27,7 @@
 
         public void Execute(object parameter)
         {
-            _contact.ApplyFrom(_contact, _operation);
+            _contact.ApplyFrom(_contact);
         }
 
         public void RaiseCanExecuteChanged()

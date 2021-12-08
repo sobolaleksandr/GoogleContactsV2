@@ -4,11 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MVVM.UI"
+        xmlns:viewModels="clr-namespace:MVVM.UI.ViewModels"
         mc:Ignorable="d"
         Title="{Binding WindowTitle}"
         ResizeMode="NoResize" SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterScreen"
-        d:DataContext="{d:DesignInstance local:ApplicationViewModel}"
+        d:DataContext="{d:DesignInstance viewModels:ApplicationViewModel}"
         MinWidth="480" MinHeight="480">
     <Window.Resources>
         <ResourceDictionary>

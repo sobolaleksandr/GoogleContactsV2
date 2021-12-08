@@ -1,4 +1,4 @@
-﻿namespace MVVM.UI
+﻿namespace MVVM.UI.ViewModels
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;

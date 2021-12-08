@@ -9,10 +9,11 @@
     using MVVM.Models;
     using MVVM.Services;
     using MVVM.UI;
+    using MVVM.UI.ViewModels;
 
     internal static class Program
     {
-        private const bool DEBUG = true;
+        private const bool DEBUG = false;
         private static async Task<ApplicationViewModel> CreateApplicationVm(UnitOfWork unitOfWork)
         {
             var groupService = unitOfWork.GroupService;
@@ -24,7 +25,7 @@
             var people = await peopleService.GetAsync();
             var peopleVm = people.Select(person => new PersonViewModel(person, observedGroups)).ToList();
 
-            return new ApplicationViewModel(peopleVm, groupsVm, groupService);
+            return new ApplicationViewModel(peopleVm, groupsVm, groupService, peopleService);
         }
 
         [STAThread]
@@ -45,39 +46,39 @@
                 if (window.ShowDialog() != true)
                     return;
 
-                Task.Run(async () => await UpdateData(vm, unitOfWork)).GetAwaiter().GetResult();
+                //Task.Run(async () => await UpdateData(vm, unitOfWork)).GetAwaiter().GetResult();
             }
         }
 
 
-        private static async Task<IContact> Update<T>(T contact, IService<T> service) where T : IContact
-        {
-            return contact.Operation switch
-            {
-                Operation.Create => await service.CreateAsync(contact),
-                Operation.Update => await service.UpdateAsync(contact),
-                Operation.Delete => await service.DeleteAsync(contact),
-                Operation.None => await Task.FromResult(new Contact()),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
+        //private static async Task<IContact> Update<T>(T contact, IService<T> service) where T : IContact
+        //{
+        //    return contact.Operation switch
+        //    {
+        //        Operation.Create => await service.CreateAsync(contact),
+        //        Operation.Update => await service.UpdateAsync(contact),
+        //        Operation.Delete => await service.DeleteAsync(contact),
+        //        Operation.None => await Task.FromResult(new Contact()),
+        //        _ => throw new ArgumentOutOfRangeException()
+        //    };
+        //}
 
-        private static async Task UpdateData(ApplicationViewModel applicationViewModel, UnitOfWork unitOfWork)
-        {
-            var groupService = unitOfWork.GroupService;
-            var selectedGroup = applicationViewModel.SelectedGroup;
-            await UpdateData(selectedGroup, groupService);
+        //private static async Task UpdateData(ApplicationViewModel applicationViewModel, UnitOfWork unitOfWork)
+        //{
+        //    var groupService = unitOfWork.GroupService;
+        //    var selectedGroup = applicationViewModel.SelectedGroup;
+        //    await UpdateData(selectedGroup, groupService);
 
-            var peopleService = unitOfWork.PeopleService;
-            var selectedPerson = applicationViewModel.SelectedPerson;
-            await UpdateData(selectedPerson, peopleService);
-        }
+        //    var peopleService = unitOfWork.PeopleService;
+        //    var selectedPerson = applicationViewModel.SelectedPerson;
+        //    await UpdateData(selectedPerson, peopleService);
+        //}
 
-        private static async Task UpdateData<T>(T selectedGroup, IService<T> groupService) where T : IContact
-        {
-            var result = await Update(selectedGroup, groupService);
-            ValidateResult(result);
-        }
+        //private static async Task UpdateData<T>(T selectedGroup, IService<T> groupService) where T : IContact
+        //{
+        //    var result = await Update(selectedGroup, groupService);
+        //    ValidateResult(result);
+        //}
 
         /// <summary>
         /// Проверка ошибки результата.

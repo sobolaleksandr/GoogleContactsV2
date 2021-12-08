@@ -1,4 +1,4 @@
-﻿namespace MVVM.UI
+﻿namespace MVVM.UI.ViewModels
 {
     using System.ComponentModel;
 
@@ -71,15 +71,9 @@
 
         public int MemberCount { get; private set; }
 
-        public override void ApplyFrom(IContact contact, Operation operation)
+        public override void ApplyFrom(IContact contact)
         {
-            base.ApplyFrom(contact, operation);
-            if (operation == Operation.Create)
-            {
-                CreateContact();
-                return;
-            }
-
+            base.ApplyFrom(contact);
             SetProperties(contact);
         }
 
@@ -88,6 +82,7 @@
             FormattedName = string.Empty;
             ResourceName = string.Empty;
             ETag = string.Empty;
+            IsCreated = true;
         }
     }
 }

@@ -11,7 +11,5 @@
         /// Наименование ресурса.
         /// </summary>
         string ResourceName { get; }
-
-        public Operation Operation { get; }
     }
 }

@@ -1,11 +1,8 @@
-﻿namespace MVVM.UI
+﻿namespace MVVM.UI.ViewModels
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.ComponentModel;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Windows;
 
     using MVVM.Models;
@@ -15,15 +12,13 @@
     /// </summary>
     public class ApplicationViewModel : ViewModelBase
     {
-        private readonly IService<IGroup> _groupService;
         private bool _peopleTabTabSelected;
         private GroupViewModel _selectedGroup;
         private PersonViewModel _selectedPerson;
 
         public ApplicationViewModel(List<PersonViewModel> peopleVm,
-            List<GroupViewModel> groupsVm, IService<IGroup> groupService)
+            List<GroupViewModel> groupsVm, IService<IGroup> groupService, IService<IPerson> peopleService)
         {
-            _groupService = groupService;
             People = new ObservableCollection<PersonViewModel>(peopleVm);
             Groups = new ObservableCollection<GroupViewModel>(groupsVm);
 
@@ -37,10 +32,11 @@
                 SelectedPerson = vm;
             });
 
-            DeletePersonCommand = new RelayCommand(obj =>
+            DeletePersonCommand = new RelayCommand(async obj =>
                 {
-                    if (obj is PersonViewModel person)
-                        People.Remove(person);
+                    var result = await peopleService.DeleteAsync(SelectedPerson);
+                    if (ValidateResult(result))
+                        People.Remove(SelectedPerson);
                 },
                 obj => People.Any());
 
@@ -51,22 +47,39 @@
                 SelectedGroup = vm;
             });
 
-            DeleteGroupCommand = new RelayCommand(obj =>
+            DeleteGroupCommand = new RelayCommand(async obj =>
                 {
-                    if (obj is GroupViewModel group)
-                        Groups.Remove(group);
+                    var result = await groupService.DeleteAsync(SelectedGroup);
+                    if (ValidateResult(result))
+                        Groups.Remove(SelectedGroup);
                 },
                 obj => Groups.Any());
-            UpdatePersonCommand = new RelayCommand(obj => SelectedPerson.ApplyFrom(SelectedPerson, Operation.Update),
+
+            UpdatePersonCommand = new RelayCommand(async obj =>
+                {
+                    var result = SelectedPerson.IsCreated
+                        ? await peopleService.CreateAsync(SelectedPerson)
+                        : await peopleService.UpdateAsync(SelectedPerson);
+
+                    if (ValidateResult(result))
+                        SelectedPerson.ApplyFrom(result);
+                },
                 obj => string.IsNullOrWhiteSpace(SelectedPerson.Error));
-            UpdateGroupCommand = new RelayCommand(obj => SelectedGroup.ApplyFrom(SelectedGroup, Operation.Update),
+
+            UpdateGroupCommand = new RelayCommand(async obj =>
+                {
+                    var result = SelectedGroup.IsCreated
+                        ? await groupService.CreateAsync(SelectedGroup)
+                        : await groupService.UpdateAsync(SelectedGroup);
+
+                    if (ValidateResult(result))
+                        SelectedGroup.ApplyFrom(result);
+                },
                 obj => string.IsNullOrWhiteSpace(SelectedGroup.Error));
         }
-        public RelayCommand UpdatePersonCommand { get; }
-        public RelayCommand UpdateGroupCommand { get; }
-
 
         public RelayCommand CreateGroupCommand { get; }
+
         public RelayCommand CreatePersonCommand { get; }
 
         public RelayCommand DeleteGroupCommand { get; }
@@ -114,39 +127,13 @@
             }
         }
 
+        public RelayCommand UpdateGroupCommand { get; }
+        public RelayCommand UpdatePersonCommand { get; }
 
         /// <summary>
         /// Заголовок окна.
         /// </summary>
         public static string WindowTitle => "GoogleContacts";
-
-        private async Task Test(object sender, EventArgs eventArgs)
-        {
-            switch (sender)
-            {
-                case GroupViewModel group:
-                {
-                    var result = await Update(group, _groupService);
-                    ValidateResult(result);
-                    //Groups.Remove(@group);
-                    return;
-                }
-                case PersonViewModel person:
-                    break;
-            }
-        }
-
-        private static async Task<IContact> Update<T>(T contact, IService<T> service) where T : IContact
-        {
-            return contact.Operation switch
-            {
-                Operation.Create => await service.CreateAsync(contact),
-                Operation.Update => await service.UpdateAsync(contact),
-                Operation.Delete => await service.DeleteAsync(contact),
-                Operation.None => await Task.FromResult(new Contact()),
-                _ => throw new ArgumentOutOfRangeException()
-            };
-        }
 
         /// <summary>
         /// Проверка ошибки результата.
