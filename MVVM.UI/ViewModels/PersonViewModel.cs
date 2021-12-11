@@ -1,12 +1,13 @@
 ﻿namespace MVVM.UI.ViewModels
 {
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
 
     using MVVM.Models;
 
-    public class PersonViewModel : ContactViewModel, IPerson, IDataErrorInfo
+    public sealed class PersonViewModel : ContactViewModel, IPerson, IDataErrorInfo
     {
         /// <summary>
         /// Поле свойства <see cref="Email"/>
@@ -43,20 +44,19 @@
         /// </summary>
         /// <param name="contact"> </param>
         /// <param name="groups"> Группы. </param>
-        public PersonViewModel(IContact contact, ObservableCollection<GroupViewModel> groups) : base(contact)
+        public PersonViewModel(IContact contact, List<GroupViewModel> groups) : base(contact)
         {
-            Groups = groups;
-            if (contact == null)
+            Groups = new ObservableCollection<GroupViewModel>(groups);
+            if (contact != null)
             {
-                CreateContact();
-                return;
+                SetProperties(contact);
+                if (string.IsNullOrEmpty(GroupResourceName))
+                    return;
+
+                SelectedGroup = groups.FirstOrDefault(group => group.ResourceName == GroupResourceName);
             }
 
-            SetProperties(contact);
-            if (string.IsNullOrEmpty(GroupResourceName))
-                return;
-
-            SelectedGroup = groups.FirstOrDefault(group => group.ResourceName == GroupResourceName);
+            IsChanged = false;
         }
 
         /// <summary>
@@ -215,25 +215,7 @@
             }
         }
 
-        public override void ApplyFrom(IContact contact)
-        {
-            base.ApplyFrom(contact);
-            SetProperties(contact);
-        }
-
-        private void CreateContact()
-        {
-            Email = string.Empty;
-            FamilyName = string.Empty;
-            GivenName = string.Empty;
-            Organization = string.Empty;
-            PhoneNumber = string.Empty;
-            GroupResourceName = string.Empty;
-            ResourceName = string.Empty;
-            IsCreated = true;
-        }
-
-        private void SetProperties(IContact contact)
+        protected override void SetProperties(IContact contact)
         {
             if (!(contact is IPerson person))
                 return;
@@ -243,7 +225,10 @@
             GivenName = person.GivenName;
             Organization = person.Organization;
             PhoneNumber = person.PhoneNumber;
-            GroupResourceName = person.GroupResourceName;
+
+            var group = Groups.FirstOrDefault(group => group.ResourceName == person.GroupResourceName);
+            if (group != null)
+                SelectedGroup = group;
         }
     }
 }

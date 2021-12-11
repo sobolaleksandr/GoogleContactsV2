@@ -1,12 +1,11 @@
-﻿namespace MVVM.Services
+﻿namespace MVVM.UI
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Google.Apis.PeopleService.v1.Data;
-
     using MVVM.Models;
+    using MVVM.UI.ViewModels;
 
     public class GroupServiceMock : IService<IGroup>
     {
@@ -23,7 +22,7 @@
         public async Task<List<IContact>> GetAsync()
         {
             var models = Enumerable.Range(100, 10).Select(item =>
-                    (IContact)new Group(new ContactGroup { FormattedName = $"TestGroup{item}", MemberCount = item }))
+                    (IContact)new GroupViewModel(null))
                 .ToList();
 
             return await Task.FromResult(models);

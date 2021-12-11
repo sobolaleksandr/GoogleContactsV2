@@ -1,4 +1,4 @@
-﻿namespace MVVM.UI
+﻿namespace MVVM.UI.Views
 {
     /// <summary>
     /// Interaction logic for EditPersonControl.xaml

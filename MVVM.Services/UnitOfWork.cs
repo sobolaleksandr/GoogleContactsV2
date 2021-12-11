@@ -12,7 +12,7 @@
     /// <summary>
     /// Единица работы для контактов и групп.
     /// </summary>
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         private const string M_CLIENT_ID = "217336154173-tdce9e8b3c9hjfsd9abnfb7q0ef4q9ab.apps.googleusercontent.com";
         private const string M_CLIENT_SECRET = "uavwQnDWY6bUEFf75pXtP0m6";
@@ -23,15 +23,9 @@
         private readonly PeopleServiceService _service;
 
         /// <summary>
-        /// Ресурсы освобождены.
-        /// </summary>
-        public bool Disposed { get; private set; }
-
-        /// <summary>
         /// Единица работы для контактов и групп.
         /// </summary>
-        /// <param name="isDebug"> Запуск в режиме отладки. </param>
-        public UnitOfWork(bool isDebug)
+        public UnitOfWork()
         {
             const string authorizedUser = "user";
             var cancellationToken = CancellationToken.None;
@@ -53,18 +47,14 @@
                 ApplicationName = "GoogleContacts",
             });
 
-            CreateServices(isDebug);
+            PeopleService = new PeopleService(_service);
+            GroupService = new GroupService(_service);
         }
 
         /// <summary>
-        /// Сервис для работы с группами.
+        /// Ресурсы освобождены.
         /// </summary>
-        public IService<IGroup> GroupService { get; private set; }
-
-        /// <summary>
-        /// Сервис для работы с контактами.
-        /// </summary>
-        public IService<IPerson> PeopleService { get; private set; }
+        public bool Disposed { get; private set; }
 
         public void Dispose()
         {
@@ -73,21 +63,14 @@
         }
 
         /// <summary>
-        /// Функция создания сервисов.
+        /// Сервис для работы с группами.
         /// </summary>
-        /// <param name="isDebug">  Запуск в режиме отладки. </param>
-        private void CreateServices(in bool isDebug)
-        {
-            if (isDebug)
-            {
-                PeopleService = new PeopleServiceMock();
-                GroupService = new GroupServiceMock();
-                return;
-            }
+        public IService<IGroup> GroupService { get; }
 
-            PeopleService = new PeopleService(_service);
-            GroupService = new GroupService(_service);
-        }
+        /// <summary>
+        /// Сервис для работы с контактами.
+        /// </summary>
+        public IService<IPerson> PeopleService { get; }
 
         /// <summary>
         /// Освободить ресурсы.

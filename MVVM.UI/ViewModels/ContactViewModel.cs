@@ -15,7 +15,10 @@
         protected ContactViewModel(IContact contact)
         {
             if (contact == null)
+            {
+                IsCreated = true;
                 return;
+            }
 
             ResourceName = contact.ResourceName;
             ETag = contact.ETag;
@@ -26,6 +29,8 @@
                 _ => Name,
             };
         }
+
+        public bool IsChanged { get; set; }
 
         public bool IsCreated { get; set; }
 
@@ -46,7 +51,7 @@
 
         public string ResourceName { get; set; }
 
-        public virtual void ApplyFrom(IContact contact)
+        public void ApplyFrom(IContact contact)
         {
             ResourceName = contact.ResourceName;
             ETag = contact.ETag;
@@ -56,6 +61,18 @@
                 IGroup group => group.FormattedName + " (" + group.MemberCount + ")",
                 _ => Name,
             };
+
+            SetProperties(contact);
+            IsChanged = false;
+            IsCreated = false;
         }
+
+        public override void OnPropertyChanged(string propertyName = null)
+        {
+            base.OnPropertyChanged(propertyName);
+            IsChanged = true;
+        }
+
+        protected abstract void SetProperties(IContact contact);
     }
 }

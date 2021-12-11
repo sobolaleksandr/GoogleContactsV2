@@ -1,4 +1,4 @@
-﻿namespace MVVM.UI
+﻿namespace MVVM.UI.Views
 {
     public partial class EditGroupControl
     {

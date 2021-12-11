@@ -51,7 +51,7 @@
             }
             catch (Exception exception)
             {
-                return new Contact(exception.ToString());
+                return ExceptionHandler.HandleException(exception);
             }
         }
 
@@ -69,7 +69,7 @@
             }
             catch (Exception exception)
             {
-                return new Contact(exception.ToString());
+                return ExceptionHandler.HandleException(exception);
             }
         }
 
@@ -110,7 +110,7 @@
             }
             catch (Exception exception)
             {
-                return new Contact(exception.ToString());
+                return ExceptionHandler.HandleException(exception);
             }
         }
 

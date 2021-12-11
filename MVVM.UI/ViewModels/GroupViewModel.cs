@@ -4,7 +4,7 @@
 
     using MVVM.Models;
 
-    public class GroupViewModel : ContactViewModel, IGroup, IDataErrorInfo
+    public sealed class GroupViewModel : ContactViewModel, IGroup, IDataErrorInfo
     {
         /// <summary>
         /// Поле свойства <see cref="FormattedName"/>
@@ -13,22 +13,10 @@
 
         public GroupViewModel(IContact contact) : base(contact)
         {
-            if (contact == null)
-            {
-                CreateContact();
-                return;
-            }
+            if (contact != null)
+                SetProperties(contact);
 
-            SetProperties(contact);
-        }
-
-        private void SetProperties(IContact contact)
-        {
-            if (!(contact is IGroup group))
-                return;
-
-            FormattedName = group.FormattedName;
-            MemberCount = group.MemberCount;
+            IsChanged = false;
         }
 
         /// <summary>
@@ -71,18 +59,13 @@
 
         public int MemberCount { get; private set; }
 
-        public override void ApplyFrom(IContact contact)
+        protected override void SetProperties(IContact contact)
         {
-            base.ApplyFrom(contact);
-            SetProperties(contact);
-        }
+            if (!(contact is IGroup group))
+                return;
 
-        private void CreateContact()
-        {
-            FormattedName = string.Empty;
-            ResourceName = string.Empty;
-            ETag = string.Empty;
-            IsCreated = true;
+            FormattedName = group.FormattedName;
+            MemberCount = group.MemberCount;
         }
     }
 }
