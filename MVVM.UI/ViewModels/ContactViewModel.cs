@@ -32,7 +32,7 @@
 
         public bool IsChanged { get; set; }
 
-        public bool IsCreated { get; set; }
+        public bool IsCreated { get; private set; }
 
         /// <summary>
         /// Наименование модели.
@@ -47,9 +47,9 @@
             }
         }
 
-        public string ETag { get; set; }
+        public string ETag { get; private set; }
 
-        public string ResourceName { get; set; }
+        public string ResourceName { get; private set; }
 
         public void ApplyFrom(IContact contact)
         {
@@ -67,7 +67,7 @@
             IsCreated = false;
         }
 
-        public override void OnPropertyChanged(string propertyName = null)
+        protected override void OnPropertyChanged(string propertyName = null)
         {
             base.OnPropertyChanged(propertyName);
             IsChanged = true;

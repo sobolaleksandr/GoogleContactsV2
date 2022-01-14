@@ -16,7 +16,6 @@
 
         public IService<IGroup> GroupService { get; }
         public IService<IPerson> PeopleService { get; }
-        public bool Disposed => false;
 
         public void Dispose()
         {

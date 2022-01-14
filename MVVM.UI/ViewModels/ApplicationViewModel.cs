@@ -1,5 +1,6 @@
 ﻿namespace MVVM.UI.ViewModels
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
@@ -28,94 +29,36 @@
             People = new ObservableCollection<PersonViewModel>();
             Groups = new ObservableCollection<GroupViewModel>();
 
-            CreatePersonCommand = new RelayCommand(obj =>
-                {
-                    var vm = new PersonViewModel(null, _groupsVm ?? new List<GroupViewModel>());
-                    People.Add(vm);
-                    SelectedPerson = vm;
-                },
-                obj => !SelectedPerson?.IsCreated == true || !People.Any());
+            CreatePersonCommand =
+                new RelayCommand(CreatePerson, obj => !SelectedPerson?.IsCreated == true || !People.Any());
 
-            CreateGroupCommand = new RelayCommand(obj =>
-                {
-                    var vm = new GroupViewModel(null);
-                    Groups.Add(vm);
-                    SelectedGroup = vm;
-                },
-                obj => !SelectedGroup?.IsCreated == true || !Groups.Any());
+            CreateGroupCommand =
+                new RelayCommand(CreateGroup, obj => !SelectedGroup?.IsCreated == true || !Groups.Any());
 
-            DeletePersonCommand = new RelayCommand(async obj =>
-                {
-                    if (!SelectedPerson.IsCreated)
-                    {
-                        var result = await _peopleService.DeleteAsync(SelectedPerson);
-                        if (!ValidateResult(result))
-                            return;
-                    }
+            DeletePersonCommand = new RelayCommandAsync(DeletePerson, obj => People.Any());
 
-                    People.Remove(SelectedPerson);
-                    SelectedPerson = People.FirstOrDefault();
-                },
-                obj => People.Any());
+            DeleteGroupCommand = new RelayCommandAsync(DeleteGroup, obj => Groups.Any());
 
-            DeleteGroupCommand = new RelayCommand(async obj =>
-                {
-                    if (!SelectedGroup.IsCreated)
-                    {
-                        var result = await _groupService.DeleteAsync(SelectedGroup);
-                        if (!ValidateResult(result))
-                            return;
-                    }
-
-                    Groups.Remove(SelectedGroup);
-                    SelectedGroup = Groups.FirstOrDefault();
-                },
-                obj => Groups.Any());
-
-            UpdatePersonCommand = new RelayCommand(async obj =>
-                {
-                    SelectedPerson.IsChanged = false;
-                    var result = SelectedPerson.IsCreated
-                        ? await _peopleService.CreateAsync(SelectedPerson)
-                        : await _peopleService.UpdateAsync(SelectedPerson);
-
-                    if (!ValidateResult(result))
-                        return;
-
-                    SelectedPerson.ApplyFrom(result);
-                    await UpdateGroups();
-                },
+            UpdatePersonCommand = new RelayCommandAsync(UpdatePerson,
                 obj => string.IsNullOrWhiteSpace(SelectedPerson?.Error) && SelectedPerson?.IsChanged == true);
 
-            UpdateGroupCommand = new RelayCommand(async obj =>
-                {
-                    SelectedGroup.IsChanged = false;
-                    var result = SelectedGroup.IsCreated
-                        ? await _groupService.CreateAsync(SelectedGroup)
-                        : await _groupService.UpdateAsync(SelectedGroup);
-
-                    if (!ValidateResult(result))
-                        return;
-
-                    SelectedGroup.ApplyFrom(result);
-                    await UpdatePeople();
-                },
+            UpdateGroupCommand = new RelayCommandAsync(UpdateGroup,
                 obj => string.IsNullOrWhiteSpace(SelectedGroup?.Error) && SelectedGroup?.IsChanged == true);
 
-            UpdateCommand = new RelayCommand(async obj =>
+            UpdateCommand = new RelayCommandAsync(async () =>
             {
                 await UpdateGroups();
                 await UpdatePeople();
-            });
+            }, null);
         }
 
         public RelayCommand CreateGroupCommand { get; }
 
         public RelayCommand CreatePersonCommand { get; }
 
-        public RelayCommand DeleteGroupCommand { get; }
+        public RelayCommandAsync DeleteGroupCommand { get; }
 
-        public RelayCommand DeletePersonCommand { get; }
+        public RelayCommandAsync DeletePersonCommand { get; }
 
         public ObservableCollection<GroupViewModel> Groups { get; }
 
@@ -158,11 +101,11 @@
             }
         }
 
-        public RelayCommand UpdateCommand { get; }
+        public RelayCommandAsync UpdateCommand { get; }
 
-        public RelayCommand UpdateGroupCommand { get; }
+        public RelayCommandAsync UpdateGroupCommand { get; }
 
-        public RelayCommand UpdatePersonCommand { get; }
+        public RelayCommandAsync UpdatePersonCommand { get; }
 
         /// <summary>
         /// Заголовок окна.
@@ -173,6 +116,9 @@
         {
             var groups = await _groupService.GetAsync();
             _groupsVm = groups.Select(group => new GroupViewModel(group)).ToList();
+
+            if (Groups.SequenceEqual(_groupsVm))
+                return;
 
             Groups.Clear();
             foreach (var group in groups)
@@ -198,6 +144,74 @@
             SelectedPerson = People.FirstOrDefault();
         }
 
+        private void CreateGroup(object sender, EventArgs eventArgs)
+        {
+            var vm = new GroupViewModel(null);
+            Groups.Add(vm);
+            SelectedGroup = vm;
+        }
+
+        private void CreatePerson(object sender, EventArgs eventArgs)
+        {
+            var vm = new PersonViewModel(null, _groupsVm ?? new List<GroupViewModel>());
+            People.Add(vm);
+            SelectedPerson = vm;
+        }
+
+        private async Task DeleteGroup()
+        {
+            if (!SelectedGroup.IsCreated)
+            {
+                var result = await _groupService.DeleteAsync(SelectedGroup);
+                if (!ValidateResult(result))
+                    return;
+            }
+
+            Groups.Remove(SelectedGroup);
+            SelectedGroup = Groups.FirstOrDefault();
+        }
+
+        private async Task DeletePerson()
+        {
+            if (!SelectedPerson.IsCreated)
+            {
+                var result = await _peopleService.DeleteAsync(SelectedPerson);
+                if (!ValidateResult(result))
+                    return;
+            }
+
+            People.Remove(SelectedPerson);
+            SelectedPerson = People.FirstOrDefault();
+        }
+
+        private async Task UpdateGroup()
+        {
+            SelectedGroup.IsChanged = false;
+            var result = SelectedGroup.IsCreated
+                ? await _groupService.CreateAsync(SelectedGroup)
+                : await _groupService.UpdateAsync(SelectedGroup);
+
+            if (!ValidateResult(result))
+                return;
+
+            SelectedGroup.ApplyFrom(result);
+            await UpdatePeople();
+        }
+
+        private async Task UpdatePerson()
+        {
+            SelectedPerson.IsChanged = false;
+            var result = SelectedPerson.IsCreated
+                ? await _peopleService.CreateAsync(SelectedPerson)
+                : await _peopleService.UpdateAsync(SelectedPerson);
+
+            if (!ValidateResult(result))
+                return;
+
+            SelectedPerson.ApplyFrom(result);
+            await UpdateGroups();
+        }
+
         /// <summary>
         /// Проверка ошибки результата.
         /// </summary>
@@ -216,7 +230,7 @@
         /// Проверка полученных результатов. 
         /// </summary>
         /// <param name="result"> Результат операции. </param>
-        /// <returns> True, если проверка пройдена. </returns>
+        /// <returns> <see langword="true"/>, если проверка пройдена. </returns>
         private static bool ValidateResult(IContact result)
         {
             if (!(result is Contact contact))
