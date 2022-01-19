@@ -11,5 +11,7 @@
         /// Наименование ресурса.
         /// </summary>
         string ResourceName { get; }
+
+        string Error { get; }
     }
 }

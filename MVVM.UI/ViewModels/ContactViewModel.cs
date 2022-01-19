@@ -50,6 +50,7 @@
         public string ETag { get; private set; }
 
         public string ResourceName { get; private set; }
+        public abstract string Error { get; }
 
         public void ApplyFrom(IContact contact)
         {

@@ -8,6 +8,7 @@
     {
         public static IContact HandleException(Exception exception)
         {
+            throw exception;
             return new Contact(exception.ToString());
         }
     }

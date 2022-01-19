@@ -13,5 +13,7 @@
         /// Сервис для работы с контактами.
         /// </summary>
         IService<IPerson> PeopleService { get; }
+
+        bool Disposed { get; }
     }
 }

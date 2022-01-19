@@ -24,7 +24,7 @@
         /// </summary>
         public static string FormattedNameTitle => "Имя";
 
-        public string Error => this[nameof(FormattedName)];
+        public override string Error => this[nameof(FormattedName)];
 
         public string this[string columnName]
         {

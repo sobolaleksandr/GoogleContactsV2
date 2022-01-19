@@ -11,7 +11,7 @@
     {
         public async Task<IContact> CreateAsync(IGroup model)
         {
-            return await Task.FromResult(new Contact());
+            return await Task.FromResult(model);
         }
 
         public async Task<IContact> DeleteAsync(IGroup model)
@@ -22,7 +22,10 @@
         public async Task<List<IContact>> GetAsync()
         {
             var models = Enumerable.Range(100, 10).Select(item =>
-                    (IContact)new GroupViewModel(null))
+                    (IContact)new GroupViewModel(null)
+                    {
+                        FormattedName = $"TestName {item}"
+                    })
                 .ToList();
 
             return await Task.FromResult(models);
@@ -30,7 +33,7 @@
 
         public async Task<IContact> UpdateAsync(IGroup model)
         {
-            return await Task.FromResult(new Contact());
+            return await Task.FromResult(model);
         }
     }
 }

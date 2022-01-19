@@ -108,8 +108,8 @@
             }
         }
 
-        public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] +
-                               this[nameof(SelectedGroup)] + this[nameof(Organization)];
+        public override string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] +
+                                        this[nameof(SelectedGroup)] + this[nameof(Organization)];
 
         public string this[string columnName]
         {

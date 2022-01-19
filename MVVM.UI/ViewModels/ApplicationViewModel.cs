@@ -35,30 +35,29 @@
             CreateGroupCommand =
                 new RelayCommand(CreateGroup, obj => !SelectedGroup?.IsCreated == true || !Groups.Any());
 
-            DeletePersonCommand = new RelayCommandAsync(DeletePerson, obj => People.Any());
+            DeletePersonCommand = new AsyncCommand(DeletePerson, obj => People.Any());
+            DeleteGroupCommand = new AsyncCommand(DeleteGroup, obj => Groups.Any());
 
-            DeleteGroupCommand = new RelayCommandAsync(DeleteGroup, obj => Groups.Any());
-
-            UpdatePersonCommand = new RelayCommandAsync(UpdatePerson,
+            UpdatePersonCommand = new AsyncCommand(UpdatePerson,
                 obj => string.IsNullOrWhiteSpace(SelectedPerson?.Error) && SelectedPerson?.IsChanged == true);
 
-            UpdateGroupCommand = new RelayCommandAsync(UpdateGroup,
+            UpdateGroupCommand = new AsyncCommand(UpdateGroup,
                 obj => string.IsNullOrWhiteSpace(SelectedGroup?.Error) && SelectedGroup?.IsChanged == true);
 
-            UpdateCommand = new RelayCommandAsync(async () =>
+            UpdateCommand = new AsyncCommand(async () =>
             {
                 await UpdateGroups();
                 await UpdatePeople();
-            }, null);
+            });
         }
 
         public RelayCommand CreateGroupCommand { get; }
 
         public RelayCommand CreatePersonCommand { get; }
 
-        public RelayCommandAsync DeleteGroupCommand { get; }
+        public AsyncCommand DeleteGroupCommand { get; }
 
-        public RelayCommandAsync DeletePersonCommand { get; }
+        public AsyncCommand DeletePersonCommand { get; }
 
         public ObservableCollection<GroupViewModel> Groups { get; }
 
@@ -101,11 +100,11 @@
             }
         }
 
-        public RelayCommandAsync UpdateCommand { get; }
+        public AsyncCommand UpdateCommand { get; }
 
-        public RelayCommandAsync UpdateGroupCommand { get; }
+        public AsyncCommand UpdateGroupCommand { get; }
 
-        public RelayCommandAsync UpdatePersonCommand { get; }
+        public AsyncCommand UpdatePersonCommand { get; }
 
         /// <summary>
         /// Заголовок окна.
@@ -144,6 +143,17 @@
             SelectedPerson = People.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Проверка полученных результатов. 
+        /// </summary>
+        /// <param name="result"> Результат операции. </param>
+        /// <returns> <see langword="true"/>, если проверка пройдена. </returns>
+        protected static bool ValidateResult(IContact result)
+        {
+            var error = result.Error;
+            return ValidateError(error);
+        }
+
         private void CreateGroup(object sender, EventArgs eventArgs)
         {
             var vm = new GroupViewModel(null);
@@ -160,28 +170,37 @@
 
         private async Task DeleteGroup()
         {
-            if (!SelectedGroup.IsCreated)
-            {
-                var result = await _groupService.DeleteAsync(SelectedGroup);
-                if (!ValidateResult(result))
-                    return;
-            }
+            if (await UpdateAsync(SelectedGroup))
+                return;
 
             Groups.Remove(SelectedGroup);
             SelectedGroup = Groups.FirstOrDefault();
+            await UpdatePeople();
         }
 
         private async Task DeletePerson()
         {
-            if (!SelectedPerson.IsCreated)
-            {
-                var result = await _peopleService.DeleteAsync(SelectedPerson);
-                if (!ValidateResult(result))
-                    return;
-            }
+            if (await UpdateAsync(SelectedPerson))
+                return;
 
             People.Remove(SelectedPerson);
             SelectedPerson = People.FirstOrDefault();
+            await UpdateGroups();
+        }
+
+        private async Task<bool> UpdateAsync(ContactViewModel contactViewModel)
+        {
+            if (contactViewModel.IsCreated)
+                return false;
+
+            var result = contactViewModel switch
+            {
+                IGroup groupViewModel => await _groupService.DeleteAsync(groupViewModel),
+                IPerson personViewModel => await _peopleService.DeleteAsync(personViewModel),
+                _ => null
+            };
+
+            return !ValidateResult(result);
         }
 
         private async Task UpdateGroup()
@@ -224,20 +243,6 @@
 
             MessageBox.Show(error);
             return false;
-        }
-
-        /// <summary>
-        /// Проверка полученных результатов. 
-        /// </summary>
-        /// <param name="result"> Результат операции. </param>
-        /// <returns> <see langword="true"/>, если проверка пройдена. </returns>
-        private static bool ValidateResult(IContact result)
-        {
-            if (!(result is Contact contact))
-                return false;
-
-            var error = contact.Error;
-            return ValidateError(error);
         }
     }
 }
