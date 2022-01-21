@@ -3,48 +3,40 @@
     using System;
     using System.Threading.Tasks;
 
-    using MVVM.Models;
-    using MVVM.Services;
-    using MVVM.UI;
     using MVVM.UI.ViewModels;
     using MVVM.UI.Views;
 
+    /// <summary>
+    /// Входная точка программы.
+    /// </summary>
     internal static class Program
     {
+        /// <summary>
+        /// Режим отладки.
+        /// </summary>
         private const bool DEBUG = false;
 
+        /// <summary>
+        /// Вызывающий метод.
+        /// </summary>
         [STAThread]
         private static void Main()
         {
             using var unitOfWork = UnitOfWorkFactory.Create(DEBUG);
-            while (true)
+
+            var viewModel = new ApplicationViewModel(unitOfWork);
+            Task.Run(async () =>
             {
-                if (unitOfWork.Disposed)
-                    return;
+                await viewModel.GroupController.UpdateGroupsAsync();
+                await viewModel.PeopleController.UpdatePeopleAsync();
+            }).GetAwaiter().GetResult();
 
-                var viewModel = new ApplicationViewModel(unitOfWork);
-                Task.Run(async () =>
-                {
-                    await viewModel.UpdateGroups();
-                    await viewModel.UpdatePeople();
-                }).GetAwaiter().GetResult();
+            var window = new MainWindow
+            {
+                DataContext = viewModel,
+            };
 
-                var window = new MainWindow
-                {
-                    DataContext = viewModel
-                };
-
-                if (window.ShowDialog() != true)
-                    return;
-            }
-        }
-    }
-
-    public static class UnitOfWorkFactory
-    {
-        public static IUnitOfWork Create(bool isDebug)
-        {
-            return isDebug ? (IUnitOfWork)new UnitOfWorkMock() : new UnitOfWork();
+            window.ShowDialog();
         }
     }
 }

@@ -4,6 +4,9 @@
 
     using MVVM.Models;
 
+    /// <summary>
+    /// Вью модель группы.
+    /// </summary>
     public sealed class GroupViewModel : ContactViewModel, IGroup, IDataErrorInfo
     {
         /// <summary>
@@ -11,6 +14,10 @@
         /// </summary>
         private string _formattedName;
 
+        /// <summary>
+        /// Вью модель группы.
+        /// </summary>
+        /// <param name="contact"> Контакт. </param>
         public GroupViewModel(IContact contact) : base(contact)
         {
             if (contact != null)
@@ -24,8 +31,10 @@
         /// </summary>
         public static string FormattedNameTitle => "Имя";
 
-        public override string Error => this[nameof(FormattedName)];
+        /// <inheritdoc />
+        public string Error => this[nameof(FormattedName)];
 
+        /// <inheritdoc />
         public string this[string columnName]
         {
             get
@@ -44,9 +53,7 @@
             }
         }
 
-        /// <summary>
-        /// Наименование.
-        /// </summary>
+        /// <inheritdoc />
         public string FormattedName
         {
             get => _formattedName;
@@ -57,8 +64,10 @@
             }
         }
 
+        /// <inheritdoc />
         public int MemberCount { get; private set; }
 
+        /// <inheritdoc />
         protected override void SetProperties(IContact contact)
         {
             if (!(contact is IGroup group))

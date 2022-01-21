@@ -8,7 +8,7 @@
         /// <summary>
         /// Базовая модель контакта.
         /// </summary>
-        /// <param name="error"></param>
+        /// <param name="error"> Ошибка модели. </param>
         public Contact(string error = "")
         {
             Error = error;

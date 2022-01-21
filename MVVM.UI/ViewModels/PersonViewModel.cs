@@ -7,6 +7,9 @@
 
     using MVVM.Models;
 
+    /// <summary>
+    /// Вью-модель пользователя.
+    /// </summary>
     public sealed class PersonViewModel : ContactViewModel, IPerson, IDataErrorInfo
     {
         /// <summary>
@@ -40,9 +43,9 @@
         private IContact _selectedGroup;
 
         /// <summary>
-        /// Вью-модель <see cref="IPerson"/>
+        /// Вью-модель пользователя.
         /// </summary>
-        /// <param name="contact"> </param>
+        /// <param name="contact"> Контакт. </param>
         /// <param name="groups"> Группы. </param>
         public PersonViewModel(IContact contact, List<GroupViewModel> groups) : base(contact)
         {
@@ -108,9 +111,11 @@
             }
         }
 
-        public override string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] +
-                                        this[nameof(SelectedGroup)] + this[nameof(Organization)];
+        /// <inheritdoc />
+        public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] +
+                               this[nameof(SelectedGroup)] + this[nameof(Organization)];
 
+        /// <inheritdoc />
         public string this[string columnName]
         {
             get
@@ -187,6 +192,7 @@
             }
         }
 
+        /// <inheritdoc />
         public string GroupResourceName { get; private set; }
 
         /// <summary>
@@ -215,6 +221,7 @@
             }
         }
 
+        /// <inheritdoc />
         protected override void SetProperties(IContact contact)
         {
             if (!(contact is IPerson person))

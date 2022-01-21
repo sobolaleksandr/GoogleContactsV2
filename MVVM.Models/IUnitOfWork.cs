@@ -2,6 +2,9 @@
 {
     using System;
 
+    /// <summary>
+    /// Интерфейс единицы работы.
+    /// </summary>
     public interface IUnitOfWork : IDisposable
     {
         /// <summary>
@@ -10,10 +13,8 @@
         IService<IGroup> GroupService { get; }
 
         /// <summary>
-        /// Сервис для работы с контактами.
+        /// Сервис для работы с пользователями.
         /// </summary>
         IService<IPerson> PeopleService { get; }
-
-        bool Disposed { get; }
     }
 }

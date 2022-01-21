@@ -16,7 +16,7 @@
     public class PeopleService : IService<IPerson>
     {
         /// <summary>
-        /// Поля для запроса данных контакта.
+        /// Поля для запроса данных пользователей.
         /// </summary>
         private const string PERSON_FIELDS = "names,emailAddresses,phoneNumbers,organizations,memberships";
 
@@ -34,6 +34,7 @@
             _service = service;
         }
 
+        /// <inheritdoc />
         public async Task<IContact> CreateAsync(IPerson model)
         {
             if (model == null)
@@ -55,6 +56,7 @@
             }
         }
 
+        /// <inheritdoc />
         public async Task<IContact> DeleteAsync(IPerson model)
         {
             if (model == null)
@@ -73,6 +75,7 @@
             }
         }
 
+        /// <inheritdoc />
         public async Task<List<IContact>> GetAsync()
         {
             var request = _service.People.Connections.List("people/me");
@@ -92,6 +95,7 @@
             }
         }
 
+        /// <inheritdoc />
         public async Task<IContact> UpdateAsync(IPerson model)
         {
             if (model == null)
@@ -115,8 +119,9 @@
         }
 
         /// <summary>
-        /// Преобразовать в объект для работы с GoogleContacts. 
+        /// Преобразовать в объект для работы с GoogleContacts.
         /// </summary>
+        /// <param name="person"> Пользователь. </param>
         /// <returns> Объект для работы с GoogleContacts. </returns>
         private static Google.Apis.PeopleService.v1.Data.Person Map(IPerson person)
         {
@@ -133,9 +138,9 @@
                     new Membership
                     {
                         ContactGroupMembership = new ContactGroupMembership
-                            { ContactGroupResourceName = person.GroupResourceName }
-                    }
-                }
+                            { ContactGroupResourceName = person.GroupResourceName },
+                    },
+                },
             };
         }
     }

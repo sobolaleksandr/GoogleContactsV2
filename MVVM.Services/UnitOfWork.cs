@@ -10,7 +10,7 @@
     using MVVM.Models;
 
     /// <summary>
-    /// Единица работы для контактов и групп.
+    /// Единица работы для пользователей и групп.
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
@@ -18,12 +18,17 @@
         private const string M_CLIENT_SECRET = "uavwQnDWY6bUEFf75pXtP0m6";
 
         /// <summary>
-        /// Сервис для работы с контактами.
+        /// Сервис для работы с пользователями.
         /// </summary>
         private readonly PeopleServiceService _service;
 
         /// <summary>
-        /// Единица работы для контактов и групп.
+        /// Ресурсы освобождены.
+        /// </summary>
+        private bool _disposed;
+
+        /// <summary>
+        /// Единица работы для пользователей и групп.
         /// </summary>
         public UnitOfWork()
         {
@@ -35,7 +40,7 @@
                 new ClientSecrets
                 {
                     ClientId = M_CLIENT_ID,
-                    ClientSecret = M_CLIENT_SECRET
+                    ClientSecret = M_CLIENT_SECRET,
                 },
                 scopes,
                 authorizedUser,
@@ -51,11 +56,7 @@
             GroupService = new GroupService(_service);
         }
 
-        /// <summary>
-        /// Ресурсы освобождены.
-        /// </summary>
-        public bool Disposed { get; private set; }
-
+        /// <inheritdoc />
         public void Dispose()
         {
             Dispose(true);
@@ -68,7 +69,7 @@
         public IService<IGroup> GroupService { get; }
 
         /// <summary>
-        /// Сервис для работы с контактами.
+        /// Сервис для работы с пользователями.
         /// </summary>
         public IService<IPerson> PeopleService { get; }
 
@@ -77,13 +78,16 @@
         /// </summary>
         private void Dispose(bool disposing)
         {
-            if (Disposed)
+            if (_disposed)
                 return;
 
             _service?.Dispose();
-            Disposed = true;
+            _disposed = true;
         }
 
+        /// <summary>
+        /// Финализатор.
+        /// </summary>
         ~UnitOfWork()
         {
             Dispose(false);

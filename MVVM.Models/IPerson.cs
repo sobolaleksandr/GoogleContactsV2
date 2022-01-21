@@ -1,5 +1,8 @@
 ﻿namespace MVVM.Models
 {
+    /// <summary>
+    /// Интерфейс пользователя.
+    /// </summary>
     public interface IPerson : IContact
     {
         /// <summary>
@@ -20,7 +23,7 @@
         /// <summary>
         /// Членство в группах.
         /// </summary>
-        public string GroupResourceName { get; }
+        string GroupResourceName { get; }
 
         /// <summary>
         /// Организация. 

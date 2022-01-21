@@ -2,6 +2,9 @@
 {
     using MVVM.Models;
 
+    /// <summary>
+    /// Базовая вью-модель контакта.
+    /// </summary>
     public abstract class ContactViewModel : ViewModelBase, IContact
     {
         /// <summary>
@@ -30,8 +33,14 @@
             };
         }
 
+        /// <summary>
+        /// Вью-модель изменена.
+        /// </summary>
         public bool IsChanged { get; set; }
 
+        /// <summary>
+        /// Вью-модель создана.
+        /// </summary>
         public bool IsCreated { get; private set; }
 
         /// <summary>
@@ -47,11 +56,16 @@
             }
         }
 
+        /// <inheritdoc />
         public string ETag { get; private set; }
 
+        /// <inheritdoc />
         public string ResourceName { get; private set; }
-        public abstract string Error { get; }
 
+        /// <summary>
+        /// Принять изменения из вне.
+        /// </summary>
+        /// <param name="contact"> Контакт. </param>
         public void ApplyFrom(IContact contact)
         {
             ResourceName = contact.ResourceName;
@@ -68,12 +82,17 @@
             IsCreated = false;
         }
 
+        /// <inheritdoc />
         protected override void OnPropertyChanged(string propertyName = null)
         {
             base.OnPropertyChanged(propertyName);
             IsChanged = true;
         }
 
+        /// <summary>
+        /// Установить свойства объекта.
+        /// </summary>
+        /// <param name="contact"></param>
         protected abstract void SetProperties(IContact contact);
     }
 }

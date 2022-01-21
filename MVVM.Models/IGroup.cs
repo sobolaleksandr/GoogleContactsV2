@@ -1,5 +1,8 @@
 ﻿namespace MVVM.Models
 {
+    /// <summary>
+    /// Интерфейс группы.
+    /// </summary>
     public interface IGroup : IContact
     {
         /// <summary>

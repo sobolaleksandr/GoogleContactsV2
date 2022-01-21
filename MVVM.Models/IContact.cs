@@ -1,5 +1,8 @@
 ﻿namespace MVVM.Models
 {
+    /// <summary>
+    /// Интерфейс контакта.
+    /// </summary>
     public interface IContact
     {
         /// <summary>
@@ -11,7 +14,5 @@
         /// Наименование ресурса.
         /// </summary>
         string ResourceName { get; }
-
-        string Error { get; }
     }
 }

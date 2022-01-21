@@ -10,27 +10,27 @@
     public interface IService<in T> where T : IContact
     {
         /// <summary>
-        /// Создать.
+        /// Создать асинхронно.
         /// </summary>
         /// <param name="model"> Модель контакта. </param>
         /// <returns> Модель контакта. </returns>
         Task<IContact> CreateAsync(T model);
 
         /// <summary>
-        /// Удалить. 
+        /// Удалить асинхронно. 
         /// </summary>
         /// <param name="model"> Модель контакта. </param>
         /// <returns> Сообщение об ошибке. </returns>
         Task<IContact> DeleteAsync(T model);
 
         /// <summary>
-        /// Получить список контактов.
+        /// Получить список контактов асинхронно.
         /// </summary>
         /// <returns> Список контактов. </returns>
         Task<List<IContact>> GetAsync();
 
         /// <summary>
-        /// Обновить контакт. 
+        /// Обновить контакт асинхронно. 
         /// </summary>
         /// <param name="model"> Модель контакта. </param>
         /// <returns> Модель контакта. </returns>

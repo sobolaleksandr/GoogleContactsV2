@@ -30,6 +30,7 @@
             _groupsResource = new ContactGroupsResource(service);
         }
 
+        /// <inheritdoc />
         public async Task<IContact> CreateAsync(IGroup model)
         {
             if (model == null)
@@ -38,7 +39,7 @@
             var group = Map(model);
             var request = new CreateContactGroupRequest
             {
-                ContactGroup = group
+                ContactGroup = group,
             };
 
             var createRequest = _groupsResource.Create(request);
@@ -56,6 +57,7 @@
             }
         }
 
+        /// <inheritdoc />
         public async Task<IContact> DeleteAsync(IGroup model)
         {
             if (model == null)
@@ -74,6 +76,7 @@
             }
         }
 
+        /// <inheritdoc />
         public async Task<List<IContact>> GetAsync()
         {
             var request = _groupsResource.List();
@@ -92,6 +95,7 @@
             }
         }
 
+        /// <inheritdoc />
         public async Task<IContact> UpdateAsync(IGroup model)
         {
             if (model == null)
@@ -99,7 +103,7 @@
 
             var request = new UpdateContactGroupRequest
             {
-                ContactGroup = Map(model)
+                ContactGroup = Map(model),
             };
 
             var updateRequest = _groupsResource.Update(request, model.ResourceName);
@@ -120,15 +124,16 @@
         }
 
         /// <summary>
-        /// Преобразовать в объект для работы с GoogleContacts. 
+        /// Преобразовать в объект для работы с GoogleContacts.
         /// </summary>
+        /// <param name="group"> Группа. </param>
         /// <returns> Объект для работы с GoogleContacts. </returns>
         private static ContactGroup Map(IGroup group)
         {
             return new ContactGroup
             {
                 Name = group.FormattedName ?? string.Empty,
-                ETag = group.ETag ?? string.Empty
+                ETag = group.ETag ?? string.Empty,
             };
         }
     }

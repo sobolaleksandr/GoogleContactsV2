@@ -38,8 +38,8 @@
                 <Border Grid.Row="0" Grid.Column="1" Background="LightGreen" />
                 <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="LightBlue" />
 
-                <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding People}"
-                         SelectedItem="{Binding SelectedPerson}">
+                <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding PeopleController.People}"
+                         SelectedItem="{Binding PeopleController.SelectedPerson}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" />
@@ -49,19 +49,19 @@
 
                 <views:EditPersonControl
                     Grid.Column="1" Grid.Row="0"
-                    DataContext="{Binding SelectedPerson}" />
+                    DataContext="{Binding PeopleController.SelectedPerson}" />
 
                 <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal"
                             HorizontalAlignment="Right">
                     <Button Content="Принять"
-                            Command="{Binding UpdatePersonCommand}" />
+                            Command="{Binding PeopleController.UpdateCommand}" />
                     <Button Content="Создать"
-                            Command="{Binding CreatePersonCommand}" />
+                            Command="{Binding PeopleController.CreateCommand}" />
                     <Button Content="Удалить"
-                            Command="{Binding DeletePersonCommand}"
-                            CommandParameter="{Binding SelectedPerson}" />
+                            Command="{Binding PeopleController.DeleteCommand}"
+                            CommandParameter="{Binding PeopleController.SelectedPerson}" />
                     <Button Content="Обновить"
-                            Command="{Binding UpdateCommand}"/>
+                            Command="{Binding UpdateCommand}" />
                 </StackPanel>
             </Grid>
         </TabItem>
@@ -82,8 +82,8 @@
                 <Border Grid.Row="0" Grid.Column="1" Background="LightGreen" />
                 <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="LightBlue" />
 
-                <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Groups}"
-                         SelectedItem="{Binding SelectedGroup}">
+                <ListBox Grid.Row="0" Grid.Column="0" ItemsSource="{Binding GroupController.Groups}"
+                         SelectedItem="{Binding GroupController.SelectedGroup}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" />
@@ -93,17 +93,17 @@
 
                 <views:EditGroupControl
                     Grid.Column="1" Grid.Row="0"
-                    DataContext="{Binding SelectedGroup}" />
+                    DataContext="{Binding GroupController.SelectedGroup}" />
 
                 <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Orientation="Horizontal"
                             HorizontalAlignment="Right">
                     <Button Content="Принять"
-                            Command="{Binding UpdateGroupCommand}" />
+                            Command="{Binding GroupController.UpdateCommand}" />
                     <Button Content="Создать"
-                            Command="{Binding CreateGroupCommand}" />
+                            Command="{Binding GroupController.CreateCommand}" />
                     <Button Content="Удалить"
-                            Command="{Binding DeleteGroupCommand}"
-                            CommandParameter="{Binding SelectedGroup}" />
+                            Command="{Binding GroupController.DeleteCommand}"
+                            CommandParameter="{Binding GroupController.SelectedGroup}" />
                     <Button Content="Обновить"
                             Command="{Binding UpdateCommand}" />
                 </StackPanel>

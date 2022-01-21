@@ -6,10 +6,15 @@
     using MVVM.Models;
 
     /// <summary>
-    /// Модель контакта.
+    /// Модель пользователя.
     /// </summary>
     public class Person : Contact, IPerson
     {
+        /// <summary>
+        /// Модель пользователя.
+        /// </summary>
+        /// <param name="person"> Пользователь. </param>
+        /// <param name="error"> Ошибка. </param>
         public Person(Google.Apis.PeopleService.v1.Data.Person person, string error = "") : base(error)
         {
             if (person == null)
@@ -46,6 +51,9 @@
         /// </summary>
         public string GivenName { get; }
 
+        /// <summary>
+        /// Наименование ресурса группы.
+        /// </summary>
         public string GroupResourceName { get; }
 
         /// <summary>

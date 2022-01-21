@@ -6,6 +6,9 @@
 
     using MVVM.Models;
 
+    /// <summary>
+    /// Модель группы.
+    /// </summary>
     public class Group : Contact, IGroup
     {
         /// <summary>

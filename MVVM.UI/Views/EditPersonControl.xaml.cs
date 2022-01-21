@@ -1,10 +1,11 @@
 ﻿namespace MVVM.UI.Views
 {
     /// <summary>
-    /// Interaction logic for EditPersonControl.xaml
+    /// Контрол для редактирования пользователя.
     /// </summary>
     public partial class EditPersonControl
     {
+        /// <inheritdoc />
         public EditPersonControl()
         {
             InitializeComponent();
