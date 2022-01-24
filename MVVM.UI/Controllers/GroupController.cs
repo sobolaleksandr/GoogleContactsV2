@@ -1,8 +1,6 @@
 ﻿namespace MVVM.UI.Controllers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -21,11 +19,6 @@
         private readonly IService<IGroup> _groupService;
 
         /// <summary>
-        /// Спиоск вью-моделей групп.
-        /// </summary>
-        private List<GroupViewModel> _groupsVm;
-
-        /// <summary>
         /// Поле свойтсва <see cref="SelectedGroup"/>.
         /// </summary>
         private GroupViewModel _selectedGroup;
@@ -36,7 +29,7 @@
         /// <param name="unitOfWork"> Единица работы. </param>
         public GroupController(IUnitOfWork unitOfWork)
         {
-            Groups = new ObservableCollection<GroupViewModel>();
+            Groups = new ObservableCollectionRange<GroupViewModel>();
             CreateCommand =
                 new RelayCommand(CreateGroup, obj => !SelectedGroup?.IsCreated == true || !Groups.Any());
 
@@ -60,7 +53,7 @@
         /// <summary>
         /// Группы.
         /// </summary>
-        public ObservableCollection<GroupViewModel> Groups { get; }
+        public ObservableCollectionRange<GroupViewModel> Groups { get; }
 
         /// <summary>
         /// Контроллер для <see cref="PersonViewModel"/>.
@@ -91,18 +84,12 @@
         public async Task UpdateGroupsAsync()
         {
             var groups = await _groupService.GetAsync();
-            _groupsVm = groups.Select(group => new GroupViewModel(group)).ToList();
+            var groupsVm = groups.Select(group => new GroupViewModel(group)).ToList();
 
-            if (Groups.SequenceEqual(_groupsVm))
-                return;
-
-            Groups.Clear();
-            foreach (var group in groups)
-            {
-                Groups.Add(new GroupViewModel(group));
-            }
-
+            var resourceNames = PeopleController.People.Select(person => person.SelectedGroup.ResourceName).ToList();
+            Groups.AddRange(groupsVm);
             SelectedGroup = Groups.FirstOrDefault();
+            PeopleController.UpdateGroups(resourceNames);
         }
 
         /// <summary>

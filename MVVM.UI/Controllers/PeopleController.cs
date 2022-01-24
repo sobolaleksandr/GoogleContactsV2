@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -16,19 +15,9 @@
     public class PeopleController : ViewModelBase
     {
         /// <summary>
-        /// Сервис для работы с <see cref="IGroup"/>.
-        /// </summary>
-        private readonly IService<IGroup> _groupService;
-
-        /// <summary>
         /// Сервис для работы с <see cref="IPerson"/>.
         /// </summary>
         private readonly IService<IPerson> _peopleService;
-
-        /// <summary>
-        /// Спиоск вью-моделей групп.
-        /// </summary>
-        private List<GroupViewModel> _groupsVm;
 
         /// <summary>
         /// Поле свойтсва <see cref="SelectedPerson"/>.
@@ -41,7 +30,7 @@
         /// <param name="unitOfWork"> Единица работы. </param>
         public PeopleController(IUnitOfWork unitOfWork)
         {
-            People = new ObservableCollection<PersonViewModel>();
+            People = new ObservableCollectionRange<PersonViewModel>();
             CreateCommand =
                 new RelayCommand(CreatePerson, obj => !SelectedPerson?.IsCreated == true || !People.Any());
 
@@ -49,7 +38,6 @@
             UpdateCommand = new AsyncCommand(UpdatePersonAsync,
                 obj => string.IsNullOrWhiteSpace(SelectedPerson?.Error) && SelectedPerson?.IsChanged == true);
 
-            _groupService = unitOfWork.GroupService;
             _peopleService = unitOfWork.PeopleService;
         }
 
@@ -71,7 +59,7 @@
         /// <summary>
         /// Контакты. 
         /// </summary>
-        public ObservableCollection<PersonViewModel> People { get; }
+        public ObservableCollectionRange<PersonViewModel> People { get; }
 
         /// <summary>
         /// Выбранный пользователь.
@@ -92,20 +80,28 @@
         public AsyncCommand UpdateCommand { get; }
 
         /// <summary>
+        /// Обновить группы пользователей.
+        /// </summary>
+        /// <param name="resourceNames"></param>
+        public void UpdateGroups(IReadOnlyList<string> resourceNames)
+        {
+            for (var index = 0; index < resourceNames.Count; index++)
+            {
+                People[index].SelectedGroup =
+                    GroupController.Groups.FirstOrDefault(group => group.ResourceName == resourceNames[index]);
+
+                People[index].IsChanged = false;
+            }
+        }
+
+        /// <summary>
         /// Обновить пользователей асинхронно.
         /// </summary>
         public async Task UpdatePeopleAsync()
         {
-            var groups = await _groupService.GetAsync();
-            _groupsVm = groups.Select(group => new GroupViewModel(group)).ToList();
-
             var people = await _peopleService.GetAsync();
-            People.Clear();
-            foreach (var person in people)
-            {
-                People.Add(new PersonViewModel(person, _groupsVm));
-            }
-
+            var peopleVm = people.Select(person => new PersonViewModel(person, GroupController.Groups)).ToList();
+            People.AddRange(peopleVm);
             SelectedPerson = People.FirstOrDefault();
         }
 
@@ -114,7 +110,7 @@
         /// </summary>
         private void CreatePerson(object sender, EventArgs eventArgs)
         {
-            var vm = new PersonViewModel(null, _groupsVm ?? new List<GroupViewModel>());
+            var vm = new PersonViewModel(null, GroupController.Groups);
             People.Add(vm);
             SelectedPerson = vm;
         }

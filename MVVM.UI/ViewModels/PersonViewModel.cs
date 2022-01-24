@@ -1,7 +1,5 @@
 ﻿namespace MVVM.UI.ViewModels
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Linq;
 
@@ -47,17 +45,11 @@
         /// </summary>
         /// <param name="contact"> Контакт. </param>
         /// <param name="groups"> Группы. </param>
-        public PersonViewModel(IContact contact, List<GroupViewModel> groups) : base(contact)
+        public PersonViewModel(IContact contact, ObservableCollectionRange<GroupViewModel> groups) : base(contact)
         {
-            Groups = new ObservableCollection<GroupViewModel>(groups);
+            Groups = groups;
             if (contact != null)
-            {
                 SetProperties(contact);
-                if (string.IsNullOrEmpty(GroupResourceName))
-                    return;
-
-                SelectedGroup = groups.FirstOrDefault(group => group.ResourceName == GroupResourceName);
-            }
 
             IsChanged = false;
         }
@@ -80,7 +72,7 @@
         /// <summary>
         /// Группы.
         /// </summary>
-        public ObservableCollection<GroupViewModel> Groups { get; }
+        public ObservableCollectionRange<GroupViewModel> Groups { get; }
 
         /// <summary>
         /// Наименование атрибута <see cref="Groups"/>
@@ -232,6 +224,9 @@
             GivenName = person.GivenName;
             Organization = person.Organization;
             PhoneNumber = person.PhoneNumber;
+
+            if (string.IsNullOrEmpty(person.ResourceName))
+                return;
 
             var group = Groups.FirstOrDefault(group => group.ResourceName == person.GroupResourceName);
             if (group != null)

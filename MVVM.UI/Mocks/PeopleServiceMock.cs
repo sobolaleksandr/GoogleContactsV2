@@ -28,7 +28,7 @@
         public async Task<List<IContact>> GetAsync()
         {
             var models = Enumerable.Range(0, 20)
-                .Select(item => (IContact)new PersonViewModel(null, new List<GroupViewModel>())
+                .Select(item => (IContact)new PersonViewModel(null, new ObservableCollectionRange<GroupViewModel>())
                 {
                     FamilyName = $"TestName {item}",
                     GivenName = $"TestGiven {item}",
